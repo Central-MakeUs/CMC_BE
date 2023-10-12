@@ -1,0 +1,6 @@
+jwt:
+  header: X-AUTH-TOKEN
+  secret: ${JWT_SECRET_KEY}
+  refresh: ${JWT_REFRESH_KEY}
+  access-token-seconds: 31536000
+  refresh-token-seconds: 31536000

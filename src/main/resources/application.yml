@@ -1,0 +1,64 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    include:
+      - common
+    group:
+      dev: dev, domain-dev
+      prod: prod, domain-prod
+      local: local, domain-local
+      localDev: localDev, domain-localDev
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 300MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+springdoc:
+  packages-to-scan: com.example.cmc_be
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: demo-ui.html
+    tags-sorter: alpha            # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+    operations-sorter: summary      # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+  cache:
+    disabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "localDev"
+
