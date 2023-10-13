@@ -1,4 +1,4 @@
-package com.example.cmc_be.user.exeption
+package com.example.cmc_be.domain.user.exeption
 
 import com.example.cmc_be.common.exeption.errorcode.BaseErrorCode
 import com.example.cmc_be.config.swagger.ErrorReason
