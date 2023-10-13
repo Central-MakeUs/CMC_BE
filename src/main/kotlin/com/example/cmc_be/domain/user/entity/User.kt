@@ -16,34 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails
 @DynamicUpdate
 @BatchSize(size = 100)
 @DynamicInsert
-class User : UserDetails, BaseEntity()  {
-    @Id @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null
-    //유저 아이디
-    private val username: String? = null
-
-    private val password: String? = null
-
-    @Column(name = "name") val name: String? = null
-
-    val nickname: String? = null
-
-    @Column(name = "phoneNumber")
-    val phoneNumber: String? = null
-
-    @Enumerated(EnumType.STRING) val role : UserRole = UserRole.ROLE_USER
-
-    @Enumerated(EnumType.STRING) val  nowGeneration : Generation? = null
-
-
-    @Enumerated(EnumType.STRING) val  signUpApprove : SignUpApprove = SignUpApprove.NOT
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "userId")
-    private val userCard: List<UserPart> = ArrayList<UserPart>()
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = 0L,
     @Column(name = "username")
     private val username: String,
     @Column(name = "password")
@@ -52,14 +28,16 @@ data class User(
     val name: String,
     @Column(name = "nickname")
     val nickname: String,
-    @Column(name = "phoneNumber")
-    val phoneNumber: String,
-    @Column(name = "role")
-    val role: String
-) : UserDetails {
+    @Enumerated(EnumType.STRING) val role : UserRole = UserRole.ROLE_USER,
+    @Enumerated(EnumType.STRING) val  nowGeneration : Generation,
+    @Enumerated(EnumType.STRING) val  signUpApprove : SignUpApprove = SignUpApprove.NOT,
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "userId")
+    private val userPart: List<UserPart> = ArrayList<UserPart>()
+) : UserDetails, BaseEntity() {
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return role.split(",").map { SimpleGrantedAuthority(it) }
+        return role.value.split(",").map { SimpleGrantedAuthority(it) }
     }
 
     override fun getPassword(): String = password
