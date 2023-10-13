@@ -1,12 +1,15 @@
 package com.example.cmc_be.common.contorller
 
+import com.backend.cmcapi.common.annotation.ApiErrorCodeExample
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.errorcode.TestErrorCode
 import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.common.security.JwtService
 import com.example.cmc_be.domain.user.entity.User
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import io.swagger.v3.oas.annotations.tags.Tag
 import mu.KotlinLogging
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,8 +34,9 @@ class TestController(
     }
 
     @GetMapping("/check-token")
+    @ApiErrorCodeExample(*[UserAuthErrorCode::class, TestErrorCode::class])
     fun checkToken(@AuthenticationPrincipal user: User): CommonResponse<String> {
-        return CommonResponse.onSuccess("성공")
+        return CommonResponse.onSuccess(user.name)
     }
 
 }
