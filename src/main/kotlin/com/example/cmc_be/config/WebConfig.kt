@@ -1,8 +1,9 @@
 package com.example.cmc_be.config
 
-import mu.KotlinLogging
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.CacheControl
+import org.springframework.util.AntPathMatcher
 import org.springframework.web.servlet.config.annotation.*
 import java.util.concurrent.TimeUnit
 
@@ -10,7 +11,6 @@ import java.util.concurrent.TimeUnit
 @Configuration
 @EnableWebMvc
 class WebConfig : WebMvcConfigurer {
-    val log = KotlinLogging.logger {}
 
     override fun addCorsMappings(registry: CorsRegistry) {
         log.info("CORS Config")
@@ -44,8 +44,17 @@ class WebConfig : WebMvcConfigurer {
     }
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
-        registry.addViewController("/swagger-ui/")
+        registry
+            .addViewController("/swagger-ui/")
             .setViewName("forward:/swagger-ui/index.html")
+    }
+
+    override fun configurePathMatch(configurer: PathMatchConfigurer) {
+        configurer.setPathMatcher(AntPathMatcher())
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(WebConfig::class.java)
     }
 }
 

@@ -1,0 +1,27 @@
+package com.example.cmc_be.domain.user.enums
+
+enum class Generation (
+    val value : String,
+    val generation: Int
+){
+    ELEVEN("ELEVEN", 11),
+    TWELVE("TWELVE", 12),
+    THIRTEEN("THIRTEEN", 13),
+    FOURTEEN("FOURTEEN", 14),
+    FIFTEEN("FIFTEEN", 15),
+    SIXTEEN("SIXTEEN", 16),
+    SEVENTEEN("SEVENTEEN", 17),
+    EIGHTEEN("EIGHTEEN", 18),
+    NINETEEN("NINETEEN", 19),
+    TWENTY("TWENTY", 20),
+    TWENTY_ONE("TWENTY_ONE", 21),
+    TWENTY_TWO("TWENTY_TWO", 22),
+    TWENTY_THREE("TWENTY_THREE", 23),
+    TWENTY_FOUR("TWENTY_FOUR", 24),
+    TWENTY_FIVE("TWENTY_FIVE", 25),
+    TWENTY_SIX("TWENTY_SIX", 26),
+    TWENTY_SEVEN("TWENTY_SEVEN", 27),
+    TWENTY_EIGHT("TWENTY_EIGHT", 28),
+    TWENTY_NINE("TWENTY_NINE", 29),
+    THIRTY("THIRTY", 30)
+}

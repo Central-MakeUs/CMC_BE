@@ -14,32 +14,21 @@ import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
-import lombok.extern.slf4j.Slf4j
-import mu.KotlinLogging
-import org.springdoc.core.SpringDocAnnotationsUtils.addAnnotationsToIgnore
-import org.springdoc.core.SpringDocUtils
+import org.slf4j.LoggerFactory
 import org.springdoc.core.customizers.OperationCustomizer
+import org.springdoc.core.utils.SpringDocUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.CookieValue
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.*
 import java.util.function.Consumer
 import kotlin.reflect.KClass
 
-
 @Configuration
-@Slf4j
 class OpenApiConfig {
-    val log = KotlinLogging.logger {}
     init {
-        SpringDocUtils.getConfig()
-            .addAnnotationsToIgnore(AuthenticationPrincipal::class.java, CookieValue::class.java)
+        SpringDocUtils.getConfig().addAnnotationsToIgnore(AuthenticationPrincipal::class.java, CookieValue::class.java)
     }
-
 
     @Bean
     fun openAPI(): OpenAPI {
@@ -94,22 +83,20 @@ class OpenApiConfig {
         for (errorType in errorCodeList) {
             val enumConstants = errorType.java.enumConstants // Access enum constants
             for (baseErrorCode in enumConstants) {
-                val errorReason = baseErrorCode?.errorReasonHttpStatus
-                val errorReasonToView = baseErrorCode?.errorReason
-                if (errorReason != null && errorReasonToView != null) {
-                    val code = errorReason.getHttpStatus()!!.value()
-                    val name = errorReason.getCode()
+                val errorReason = baseErrorCode?.errorReason
+
+                if (errorReason != null) {
+                    val code = errorReason.httpStatus.value()
+                    val name = errorReason.code
                     val explainError = baseErrorCode.explainError ?: ""
                     val exampleHolder = ExampleHolder(
-                        holder = getSwaggerExample(explainError, errorReasonToView),
+                        holder = getSwaggerExample(explainError, errorReason),
                         code = code,
                         name = name
                     )
-                    code.let {
-                        statusWithExampleHolders
-                            .computeIfAbsent(it) { ArrayList() }
-                            .add(exampleHolder)
-                    }
+                    statusWithExampleHolders
+                        .computeIfAbsent(code) { ArrayList() }
+                        .add(exampleHolder)
                 }
             }
         }
@@ -119,7 +106,12 @@ class OpenApiConfig {
     private fun getSwaggerExample(value: String, errorReason: ErrorReason): Example {
         val example = Example()
         example.description(value)
-        example.setValue(errorReason)
+        val errorReasonToView : ErrorReasonToView = ErrorReasonToView(
+            errorReason.isSuccess,
+            errorReason.code,
+            errorReason.message
+        )
+        example.setValue(errorReasonToView)
         return example
     }
 
@@ -137,8 +129,13 @@ class OpenApiConfig {
                     )
                 })
             content.addMediaType("application/json", mediaType)
-            apiResponse.setContent(content)
+            apiResponse.content = content
             responses.addApiResponse(status.toString(), apiResponse)
         }
+    }
+
+    companion object {
+
+        private val log = LoggerFactory.getLogger(OpenApiConfig::class.java)
     }
 }

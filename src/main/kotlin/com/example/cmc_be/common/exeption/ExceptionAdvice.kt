@@ -1,9 +1,10 @@
 package com.example.cmc_be.common.exeption
 
 import com.example.cmc_be.common.response.CommonResponse
-import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
-import mu.KotlinLogging
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.ConstraintViolation
+import jakarta.validation.ConstraintViolationException
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -15,20 +16,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.*
-import java.util.function.Function
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
-import javax.servlet.http.HttpServletRequest
-import javax.validation.ConstraintViolation
-import javax.validation.ConstraintViolationException
-import javax.validation.Path
 
-@Slf4j
 @RestControllerAdvice
 class ExceptionAdvice {
-    val log = KotlinLogging.logger {}
-
-
 
     @ExceptionHandler(ConstraintViolationException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -38,7 +30,7 @@ class ExceptionAdvice {
                 Collectors.toMap(
                     { violation: ConstraintViolation<*> ->
                         StreamSupport.stream(violation.propertyPath.spliterator(), false)
-                            .reduce { first: Path.Node?, second: Path.Node -> second }
+                            .reduce { first, second -> second }
                             .get().toString()
                     },
                     { obj: ConstraintViolation<*> -> obj.message })
@@ -92,16 +84,24 @@ class ExceptionAdvice {
     fun onKnownException(
         baseException: BaseException,
         @AuthenticationPrincipal user: User?, request: HttpServletRequest
-    ): CommonResponse<*> {
+    ): ResponseEntity<*> {
         getExceptionStackTrace(baseException, user, request)
-        log.info(baseException.errorReasonHttpStatus!!.getCode())
-        log.info(baseException.message)
-        return CommonResponse.onFailure(
-            baseException.errorReasonHttpStatus?.getCode(),
-            baseException.errorReasonHttpStatus?.getMessage(),
-            baseException.errorReasonHttpStatus?.getResult()
+        log.info(baseException.errorReason.httpStatus.toString())
+        log.info(baseException.errorReason.code)
+
+        return ResponseEntity<Any?>(
+            CommonResponse.onFailure(
+                baseException.errorReason.code,
+                baseException.errorReason.message,
+                baseException.errorReason.result
+            ),
+            null, baseException.errorReason.httpStatus!!
         )
     }
 
 
+    companion object {
+
+        private val log = LoggerFactory.getLogger(Exception::class.java)
+    }
 }
