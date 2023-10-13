@@ -14,25 +14,24 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Tag(name ="Test 도메인")
+@Tag(name = "Test 도메인")
 @RequestMapping("/tests")
-class TestController (
+class TestController(
     private val jwtService: JwtService
-){
+) {
     val log = KotlinLogging.logger {}
 
-
     @GetMapping("/{userId}")
-    fun createJwt(@PathVariable("userId") userId : Long) : CommonResponse<String?> {
-        val token : String? = jwtService.createToken(userId)
+    fun createJwt(@PathVariable("userId") userId: Long): CommonResponse<String> {
+        val token: String = jwtService.createToken(userId)
         val response = CommonResponse.onSuccess(token)
-        if(userId != 1L) throw BadRequestException(TestErrorCode.TEST_ERROR_CODE)
+        if (userId != 1L) throw BadRequestException(TestErrorCode.TEST_ERROR_CODE)
         log.info { response }
         return CommonResponse.onSuccess(token)
     }
 
     @GetMapping("/check-token")
-    fun checkToken(@AuthenticationPrincipal user : User?) : CommonResponse<String?>{
+    fun checkToken(@AuthenticationPrincipal user: User): CommonResponse<String> {
         return CommonResponse.onSuccess("성공")
     }
 

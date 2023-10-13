@@ -1,5 +1,6 @@
 package com.example.cmc_be.domain.user.entity
 
+import jakarta.persistence.*
 import com.example.cmc_be.common.dto.BaseEntity
 import com.example.cmc_be.domain.user.enums.Generation
 import com.example.cmc_be.domain.user.enums.SignUpApprove
@@ -10,10 +11,8 @@ import org.hibernate.annotations.DynamicUpdate
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import javax.persistence.*
 
-@Entity
-@Table(name = "`User`")
+@Entity(name = "User")
 @DynamicUpdate
 @BatchSize(size = 100)
 @DynamicInsert
@@ -41,23 +40,30 @@ class User : UserDetails, BaseEntity()  {
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "userId")
     private val userCard: List<UserPart> = ArrayList<UserPart>()
+data class User(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long,
+    @Column(name = "username")
+    private val username: String,
+    @Column(name = "password")
+    private val password: String,
+    @Column(name = "name")
+    val name: String,
+    @Column(name = "nickname")
+    val nickname: String,
+    @Column(name = "phoneNumber")
+    val phoneNumber: String,
+    @Column(name = "role")
+    val role: String
+) : UserDetails {
 
-    override fun getAuthorities(): Collection<GrantedAuthority>? {
-        val authorities: MutableCollection<GrantedAuthority> = ArrayList()
-        for (role in role.value!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) authorities.add(
-            SimpleGrantedAuthority(role)
-        )
-        return authorities
+    override fun getAuthorities(): Collection<GrantedAuthority> {
+        return role.split(",").map { SimpleGrantedAuthority(it) }
     }
 
-
-    override fun getPassword(): String? {
-        return password
-    }
-
-    override fun getUsername(): String? {
-        return username
-    }
+    override fun getPassword(): String = password
+    override fun getUsername(): String = username
 
     override fun isAccountNonExpired(): Boolean {
         return false
@@ -78,5 +84,4 @@ class User : UserDetails, BaseEntity()  {
     fun isActivated(): Boolean {
         return true
     }
-
 }

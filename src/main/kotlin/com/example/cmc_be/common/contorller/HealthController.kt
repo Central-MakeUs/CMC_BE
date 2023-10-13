@@ -16,7 +16,7 @@ class HealthController {
     @GetMapping("")
     @ApiErrorCodeExample(UserAuthErrorCode::class)
     @Operation(summary = "HealthCheck 용 API 입니다", description = "헬스체크")
-    fun healthCheck(): String? {
+    fun healthCheck(): String {
         return "I'm Healthy Server"
     }
 }

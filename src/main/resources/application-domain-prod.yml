@@ -1,7 +1,8 @@
 spring:
-  redis:
-    host: ${REDIS_PROD_HOST}
-    port: 6379
+  data:
+    redis:
+      host: ${REDIS_PROD_HOST}
+      port: 6379
   config:
     activate:
       on-profile: prod
@@ -14,7 +15,6 @@ spring:
     password: ${AWS_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     # create, update, create-drop, none 등의 옵션이 있습니다.
     # create: 기존테이블 삭제 후 다시 생성
     # update: 변경된 부분만 반영

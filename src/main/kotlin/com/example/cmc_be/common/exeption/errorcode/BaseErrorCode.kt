@@ -4,11 +4,7 @@ import com.example.cmc_be.config.swagger.ErrorReason
 
 
 interface BaseErrorCode {
-    val errorReason: ErrorReason?
-
-    @get:Throws(NoSuchFieldException::class)
-    val explainError: String?
-
-    val errorReasonHttpStatus: ErrorReason?
+    val errorReason: ErrorReason
+    val explainError: String
 }
 
