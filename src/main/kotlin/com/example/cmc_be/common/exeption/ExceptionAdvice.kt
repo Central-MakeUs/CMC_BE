@@ -84,16 +84,21 @@ class ExceptionAdvice {
     fun onKnownException(
         baseException: BaseException,
         @AuthenticationPrincipal user: User?, request: HttpServletRequest
-    ): CommonResponse<*> {
+    ): ResponseEntity<*> {
         getExceptionStackTrace(baseException, user, request)
+        log.info(baseException.errorReason.httpStatus.toString())
         log.info(baseException.errorReason.code)
-        log.info(baseException.message)
-        return CommonResponse.onFailure(
-            baseException.errorReason.code,
-            baseException.errorReason.message,
-            baseException.errorReason.result
+
+        return ResponseEntity<Any?>(
+            CommonResponse.onFailure(
+                baseException.errorReason.code,
+                baseException.errorReason.message,
+                baseException.errorReason.result
+            ),
+            null, baseException.errorReason.httpStatus!!
         )
     }
+
 
     companion object {
 
