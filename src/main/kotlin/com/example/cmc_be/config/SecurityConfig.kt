@@ -5,28 +5,38 @@ import com.example.cmc_be.common.security.JwtAuthenticationEntryPoint
 import com.example.cmc_be.common.security.JwtSecurityConfig
 import com.example.cmc_be.common.security.JwtService
 import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
-import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.AccessDeniedHandler
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsUtils
 
 @Configuration
 @EnableWebSecurity
-@ConditionalOnDefaultWebSecurity
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 class SecurityConfig(
     private val jwtService: JwtService,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
-    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
 ) {
 
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        log.info("passwordEncoder Config")
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun customAuthenticationFailureHandler(): AccessDeniedHandler {
+        return JwtAccessDeniedHandler()
+    }
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer { web ->
@@ -43,7 +53,7 @@ class SecurityConfig(
     }
 
     @Bean
-    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         log.info("security config!")
         http
             .csrf { obj -> obj.disable() }
@@ -65,8 +75,9 @@ class SecurityConfig(
                     .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/favicon.ico/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/swagger-ui/index.html").permitAll()
                     .requestMatchers("/demo-ui.html").permitAll()
-                    .requestMatchers("/api-docs/**").permitAll()
+                    .requestMatchers("/api-docs/").permitAll()
                     .requestMatchers("/api-docs/json/swagger-config").permitAll()
                     .requestMatchers("/webjars/**").permitAll()
                     .requestMatchers("/v3/api-docs").permitAll()

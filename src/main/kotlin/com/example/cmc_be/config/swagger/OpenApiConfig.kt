@@ -15,8 +15,8 @@ import io.swagger.v3.oas.models.responses.ApiResponses
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import org.slf4j.LoggerFactory
-import org.springdoc.core.SpringDocUtils
 import org.springdoc.core.customizers.OperationCustomizer
+import org.springdoc.core.utils.SpringDocUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -84,6 +84,7 @@ class OpenApiConfig {
             val enumConstants = errorType.java.enumConstants // Access enum constants
             for (baseErrorCode in enumConstants) {
                 val errorReason = baseErrorCode?.errorReason
+
                 if (errorReason != null) {
                     val code = errorReason.httpStatus.value()
                     val name = errorReason.code
@@ -105,7 +106,12 @@ class OpenApiConfig {
     private fun getSwaggerExample(value: String, errorReason: ErrorReason): Example {
         val example = Example()
         example.description(value)
-        example.setValue(errorReason)
+        val errorReasonToView : ErrorReasonToView = ErrorReasonToView(
+            errorReason.isSuccess,
+            errorReason.code,
+            errorReason.message
+        )
+        example.setValue(errorReasonToView)
         return example
     }
 

@@ -1,6 +1,6 @@
 package com.example.cmc_be.common.security
 
-import com.example.cmc_be.user.exeption.UserAuthErrorCode
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import mu.KotlinLogging
@@ -19,14 +19,13 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse,
         authException: AuthenticationException?
     ) {
-        val log = KotlinLogging.logger {}
-        log.info { "1234" }
-
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
         val exception = request.getAttribute("exception") as String
         val errorCode = when (exception) {
-            "UnauthorizedException" -> UserAuthErrorCode.UNAUTHORIZED_EXCEPTION
-
+            "UnauthorizedException" -> {
+                println(exception)
+                UserAuthErrorCode.UNAUTHORIZED_EXCEPTION
+            }
             "NotExistUser" -> UserAuthErrorCode.NOT_EXIST_USER
 
             "ExpiredJwtException" -> UserAuthErrorCode.EXPIRED_JWT_EXCEPTION
@@ -35,10 +34,9 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
 
             "HijackException" -> UserAuthErrorCode.HIJACK_JWT_TOKEN_EXCEPTION
 
-            "NoSuchElementException" -> {
-                log.info("No such element")
-                UserAuthErrorCode.NOT_EXISTS_USER_HAVE_TOKEN
-            }
+            "NoSuchElementException" -> UserAuthErrorCode.NOT_EXISTS_USER_HAVE_TOKEN
+
+            "NotApproveUserException" -> UserAuthErrorCode.NOT_APPROVE_SIGN_UP
 
             else -> UserAuthErrorCode.FORBIDDEN_EXCEPTION
         }

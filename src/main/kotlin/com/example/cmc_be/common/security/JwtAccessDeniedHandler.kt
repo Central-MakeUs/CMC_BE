@@ -1,6 +1,6 @@
 package com.example.cmc_be.common.security
 
-import com.example.cmc_be.user.exeption.UserAuthErrorCode
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.json.JSONException

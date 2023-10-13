@@ -29,7 +29,6 @@ class JwtFilter(private val jwtService: JwtService) : GenericFilterBean() {
                 log.info("해당 토큰을 가진 유저가 존재하지 않습니다, uri: $requestURI")
             }
         } else {
-            servletRequest.setAttribute("exception", "UnauthorizedException")
             log.info("유효한 JWT 토큰이 없습니다, uri: $requestURI")
         }
         filterChain.doFilter(servletRequest, servletResponse)

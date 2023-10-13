@@ -1,6 +1,8 @@
 package com.example.cmc_be.common.security
 
+import com.example.cmc_be.common.exeption.NotApproveUserException
 import com.example.cmc_be.common.properties.JwtProperties
+import com.example.cmc_be.domain.user.enums.SignUpApprove
 import com.example.cmc_be.domain.user.repository.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -63,12 +65,17 @@ class JwtService(
             val claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token)
             val userId = claims.body.get("userId", Integer::class.java).toLong()
             val users = userRepository.findById(userId)
-
-            log.info(users.get().toString())
+            if (users.get().signUpApprove.equals(SignUpApprove.NOT)) {
+                throw NotApproveUserException("Not approved user.")
+            }
             return UsernamePasswordAuthenticationToken(users.get(), "", users.get().authorities)
         } catch (e: NoSuchElementException) {
             log.info("유저가 존재하지 않습니다.")
             servletRequest.setAttribute("exception", "NoSuchElementException")
+        }   catch (e: NotApproveUserException) {
+            // NotApproveUserException을 잡아서 처리
+            log.info("Not approved user: ${e.message}")
+            servletRequest.setAttribute("exception", "NotApproveUserException")
         }
         return null
     }
