@@ -1,13 +1,12 @@
 package com.example.cmc_be.user.exeption
 
+import com.example.cmc_be.common.annotation.ExplainError
 import com.example.cmc_be.common.exeption.errorcode.BaseErrorCode
 import com.example.cmc_be.config.swagger.ErrorReason
-import com.example.cmc_be.common.annotation.ExplainError
 import org.springframework.http.HttpStatus
-import java.lang.reflect.Field
 import java.util.*
 
-enum class UserAuthErrorCode (
+enum class UserAuthErrorCode(
     val httpStatus: HttpStatus,
     val code: String,
     val message: String
@@ -16,8 +15,7 @@ enum class UserAuthErrorCode (
     /*
        인증 관련 에러코드
     */
-
-    ForbiddenException(HttpStatus.UNAUTHORIZED, "AUTH002", "해당 요청에 대한 권한이 없습니다."),
+    FORBIDDEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH002", "해당 요청에 대한 권한이 없습니다."),
     UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH003", "로그인 후 이용가능합니다. 토큰을 입력해 주세요"),
     EXPIRED_JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH004", "기존 토큰이 만료되었습니다. 토큰을 재발급해주세요."),
     RE_LOGIN_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH005", "모든 토큰이 만료되었습니다. 다시 로그인해주세요."),
@@ -36,19 +34,13 @@ enum class UserAuthErrorCode (
             httpStatus = httpStatus,
             isSuccess = false
         )
+
     @get:Throws(NoSuchFieldException::class)
     override val explainError: String
         get() {
-            val field: Field = this.javaClass.getField(this.name)
-            val annotation: ExplainError? = field.getAnnotation(ExplainError::class.java)
+            val field = this.javaClass.getField(this.name)
+            val annotation = field.getAnnotation(ExplainError::class.java)
             return annotation?.value ?: message
         }
 
-    override val errorReasonHttpStatus: ErrorReason
-        get() = ErrorReason(
-            message = message,
-            code = code,
-            httpStatus = httpStatus,
-            isSuccess = false
-        )
 }

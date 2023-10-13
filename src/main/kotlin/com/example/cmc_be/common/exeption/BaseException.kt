@@ -6,36 +6,21 @@ import org.springframework.http.HttpStatus
 
 
 open class BaseException(
-    private val httpStatus: HttpStatus?,
-    private val isSuccess: Boolean,
-    private val resultCode: String?,
-    private val resultMsg: String?) :
-    RuntimeException() {
-    private val errorCode: BaseErrorCode
+    val httpStatus: HttpStatus,
+    val isSuccess: Boolean,
+    val resultCode: String,
+    val resultMsg: String
+) : RuntimeException() {
 
-    init {
-        errorCode = object : BaseErrorCode {
-            override val errorReason: ErrorReason
-                get() = ErrorReason(
-                    message = resultMsg,
-                    code = resultCode,
-                    isSuccess = isSuccess
-                )
-
-            @get:Throws(NoSuchFieldException::class)
-            override val explainError: String?
-                get() = null
-            override val errorReasonHttpStatus: ErrorReason
-                get() = ErrorReason(
-                    message = resultMsg,
-                    code = resultCode,
-                    isSuccess = isSuccess
-                )
-        }
+    private val errorCode: BaseErrorCode = object : BaseErrorCode {
+        override val errorReason = ErrorReason(
+            httpStatus = httpStatus,
+            message = resultMsg,
+            code = resultCode,
+            isSuccess = isSuccess
+        )
+        override val explainError: String = ""
     }
 
-    val errorReason: ErrorReason?
-        get() = errorCode.errorReason
-    val errorReasonHttpStatus: ErrorReason?
-        get() = errorCode.errorReasonHttpStatus
+    val errorReason = errorCode.errorReason
 }
