@@ -1,7 +1,7 @@
 package com.example.cmc_be.common.security
 
 import com.example.cmc_be.common.exeption.UnauthorizedException
-import com.example.cmc_be.user.exeption.UserAuthErrorCode
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import mu.KotlinLogging
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.StringUtils

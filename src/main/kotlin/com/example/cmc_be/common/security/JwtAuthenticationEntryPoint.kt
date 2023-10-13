@@ -1,6 +1,6 @@
 package com.example.cmc_be.common.security
 
-import com.example.cmc_be.user.exeption.UserAuthErrorCode
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import mu.KotlinLogging
 import org.json.JSONException
 import org.json.JSONObject
@@ -22,8 +22,6 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         authException: AuthenticationException?
     ) {
         val log = KotlinLogging.logger {}
-        log.info { "1234" }
-
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
         val exception : String = request.getAttribute("exception") as String
         val errorCode: UserAuthErrorCode

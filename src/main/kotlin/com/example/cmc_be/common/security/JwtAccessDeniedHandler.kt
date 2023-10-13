@@ -1,6 +1,6 @@
 package com.example.cmc_be.common.security
 
-import com.example.cmc_be.user.exeption.UserAuthErrorCode
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import org.json.JSONException
 import org.json.JSONObject
 import org.springframework.security.access.AccessDeniedException
