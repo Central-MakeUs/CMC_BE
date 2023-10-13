@@ -34,7 +34,7 @@ dependencies {
 
     implementation("mysql:mysql-connector-java:8.0.28")
 
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.12")
+    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
