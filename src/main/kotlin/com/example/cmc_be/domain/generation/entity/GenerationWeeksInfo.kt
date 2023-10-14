@@ -1,8 +1,6 @@
 package com.example.cmc_be.domain.generation.entity
 
 import com.example.cmc_be.common.dto.BaseEntity
-import com.example.cmc_be.domain.generation.enums.Weeks
-import com.example.cmc_be.domain.user.enums.Generation
 import jakarta.persistence.*
 import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.DynamicInsert
@@ -17,11 +15,10 @@ import java.time.LocalDate
 class GenerationWeeksInfo(
     @Id
     @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = 0L,
-    @Enumerated(EnumType.STRING) val generation : Generation,
-    @Enumerated(EnumType.STRING) val week: Weeks,
-    val weekStart : LocalDate,
-    val weekEnd : LocalDate,
-    val attendanceDate : LocalDate
-) : BaseEntity() {
-}
+    val id: Long = 0L,
+    val generation: Int,
+    val week: Int,
+    val weekStart: LocalDate,
+    val weekEnd: LocalDate,
+    val attendanceDate: LocalDate
+) : BaseEntity()
