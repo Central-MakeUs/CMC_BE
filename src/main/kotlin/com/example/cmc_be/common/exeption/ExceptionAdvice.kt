@@ -95,7 +95,7 @@ class ExceptionAdvice {
                 baseException.errorReason.message,
                 baseException.errorReason.result
             ),
-            null, baseException.errorReason.httpStatus!!
+            null, baseException.errorReason.httpStatus
         )
     }
 
