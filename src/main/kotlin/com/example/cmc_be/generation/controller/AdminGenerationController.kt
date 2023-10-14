@@ -3,7 +3,6 @@ package com.example.cmc_be.generation.controller
 import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.generation.dto.GenerationReq
-import com.example.cmc_be.generation.dto.GenerationRes
 import com.example.cmc_be.generation.service.GenerationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -29,7 +28,7 @@ class AdminGenerationController(
     @GetMapping("/date")
     fun getGenerationWeeksInfoDate(
         @AuthenticationPrincipal user: User,
-    ): CommonResponse<List<GenerationRes.GenerationWeeksInfoDto>> {
+    ): CommonResponse<List<String>> {
         return CommonResponse.onSuccess(generationService.getGenerationWeeksInfoDate(user))
     }
 }

@@ -4,4 +4,6 @@ import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface GenerationWeeksInfoRepository : JpaRepository<GenerationWeeksInfo, Long> {
+
+    fun findAllByGeneration(generation: Int): List<GenerationWeeksInfo>
 }
