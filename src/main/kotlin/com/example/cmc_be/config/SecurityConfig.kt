@@ -85,6 +85,7 @@ class SecurityConfig(
                     .requestMatchers("/health").permitAll()
                     .requestMatchers("/tests/check-token").authenticated()
                     .requestMatchers("/").permitAll()
+                    .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                     .anyRequest()
                     .authenticated()
             }.apply(JwtSecurityConfig(jwtService))
