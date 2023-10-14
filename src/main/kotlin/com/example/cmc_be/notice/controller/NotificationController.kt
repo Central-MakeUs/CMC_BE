@@ -12,19 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/Notifications")
-@Tag(name ="02 Notification 공지 관련 API")
+@RequestMapping("/notifications")
+@Tag(name = "02 Notification 공지 관련 API")
 class NotificationController(
     private val notificationService: NotificationService
 ) {
-    @GetMapping("")
-    @Operation(summary = "02-01 이번주 차 공지 조회")
-    fun getThisWeekNotification(@AuthenticationPrincipal user: User) : CommonResponse<List<NotificationRes.NotificationDto>>{
+    @GetMapping
+    @Operation(summary = "02-01 이번주 차 최신 공지 조회")
+    fun getThisWeekNotification(@AuthenticationPrincipal user: User): CommonResponse<NotificationRes.NotificationDto> {
         return CommonResponse.onSuccess(notificationService.getThisWeekNotification(user))
     }
+
     @GetMapping("/all")
     @Operation(summary = "02-02 전체 공지 조회")
-    fun getAllNotification(@AuthenticationPrincipal user: User) : CommonResponse<List<NotificationRes.NotificationDto>>{
+    fun getAllNotification(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes.NotificationDto>> {
         return CommonResponse.onSuccess(notificationService.getAllNotification(user))
     }
 }

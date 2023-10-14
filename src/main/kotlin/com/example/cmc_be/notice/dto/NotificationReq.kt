@@ -1,7 +1,11 @@
 package com.example.cmc_be.notice.dto
 
 class NotificationReq {
-    class NotificationInfo {
 
-    }
+    data class NotificationInfo(
+        val generation: Int,
+        val week: Int,
+        val notionUrl: String,
+        val title: String
+    )
 }
