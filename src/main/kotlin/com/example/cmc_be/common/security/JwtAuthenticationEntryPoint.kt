@@ -3,9 +3,9 @@ package com.example.cmc_be.common.security
 import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import mu.KotlinLogging
 import org.json.JSONException
 import org.json.JSONObject
+import org.slf4j.LoggerFactory
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
@@ -20,12 +20,12 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         authException: AuthenticationException?
     ) {
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
-        val exception = request.getAttribute("exception") as String
+        val exception = request.getAttribute("exception") as? String
         val errorCode = when (exception) {
             "UnauthorizedException" -> {
-                println(exception)
                 UserAuthErrorCode.UNAUTHORIZED_EXCEPTION
             }
+
             "NotExistUser" -> UserAuthErrorCode.NOT_EXIST_USER
 
             "ExpiredJwtException" -> UserAuthErrorCode.EXPIRED_JWT_EXCEPTION
@@ -58,5 +58,9 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
             }
         }
         response.writer.print(json)
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(JwtAuthenticationEntryPoint::class.java)
     }
 }
