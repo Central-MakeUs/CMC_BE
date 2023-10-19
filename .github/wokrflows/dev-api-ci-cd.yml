@@ -1,4 +1,4 @@
-name: dev CMC API Server CI/CD
+name: dev CMC API Server BeanStalk CI/CD
 
 on:
   push:
