@@ -23,7 +23,7 @@ class AttendanceController(
     }
 
     @PostMapping("")
-    @Operation(summary = "03-02 출석 체크")
+    @Operation(summary = "03-02 출석 체크 진행")
     fun setAttendance(
         @AuthenticationPrincipal user: User,
         @RequestBody attendanceCode: AttendanceReq.AttendanceCode

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface AttendanceRepository : JpaRepository<Attendance, Long> {
 
     fun findAllByUserId(userId: Long): List<Attendance>
-    fun findAllByGenerationWeeksInfoId(generationId: Long): List<Attendance>
+    fun findAllByGenerationWeeksInfoGeneration(generation: Int): List<Attendance>
 }

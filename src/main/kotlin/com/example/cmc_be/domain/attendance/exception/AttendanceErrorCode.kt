@@ -11,7 +11,9 @@ enum class AttendanceErrorCode(
     val message: String
 ) : BaseErrorCode {
 
-    ALREADY_ATEENDANCE(HttpStatus.BAD_REQUEST, "ATTENDANCE001", "이미 출석하였습니다.");
+    ALREADY_ATEENDANCE(HttpStatus.BAD_REQUEST, "ATTENDANCE001", "이미 출석하였습니다."),
+    NOT_EXIST_HOUR(HttpStatus.BAD_REQUEST, "ATTENDANCE002", "존재 하지 않는 출석 차례입니다."),
+    CANNOT_ACCESS_ATEENDANCE(HttpStatus.BAD_REQUEST, "ATTENDANCE003", "출석 불가능한 기수입니다.");
 
     override val errorReason: ErrorReason
         get() = ErrorReason(
