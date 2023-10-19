@@ -1,10 +1,9 @@
 package com.example.cmc_be.domain.user.entity
 
-import jakarta.persistence.*
 import com.example.cmc_be.common.dto.BaseEntity
-import com.example.cmc_be.domain.user.enums.Generation
 import com.example.cmc_be.domain.user.enums.SignUpApprove
 import com.example.cmc_be.domain.user.enums.UserRole
+import jakarta.persistence.*
 import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -19,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = 0L,
+    val id: Long = 0L,
     @Column(name = "username")
     private val username: String,
     @Column(name = "password")
@@ -28,9 +27,9 @@ data class User(
     val name: String,
     @Column(name = "nickname")
     val nickname: String,
-    @Enumerated(EnumType.STRING) val role : UserRole = UserRole.ROLE_USER,
-    @Enumerated(EnumType.STRING) val  nowGeneration : Generation,
-    @Enumerated(EnumType.STRING) val  signUpApprove : SignUpApprove = SignUpApprove.NOT,
+    @Enumerated(EnumType.STRING) val role: UserRole = UserRole.ROLE_USER,
+    val nowGeneration: Int,
+    @Enumerated(EnumType.STRING) val signUpApprove: SignUpApprove = SignUpApprove.NOT,
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "userId")
     private val userPart: List<UserPart> = ArrayList<UserPart>()

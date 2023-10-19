@@ -14,12 +14,12 @@ import org.hibernate.annotations.DynamicUpdate
 @DynamicInsert
 data class Notification(
     @Id
-    @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long,
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "weekId", nullable = false, updatable = false)
-    private val week: GenerationWeeksInfo,
-    val title : String,
-    val notionUrl : String
-) : BaseEntity(){
-
-}
+    val generationWeeksInfo: GenerationWeeksInfo,
+    val title: String,
+    val notionUrl: String
+) : BaseEntity()

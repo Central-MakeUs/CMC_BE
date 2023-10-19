@@ -11,7 +11,6 @@ import com.example.cmc_be.user.convertor.UserConvertor
 import com.example.cmc_be.user.dto.AuthReq
 import com.example.cmc_be.user.dto.AuthRes
 import jakarta.transaction.Transactional
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -28,23 +27,36 @@ class AuthService(
     fun signUpUser(signUpUserDto: AuthReq.SignUpUserDto): AuthRes.UserTokenDto {
         userAdapter.checkEmailExists(signUpUserDto.email)
 
-        val user : User =  userRepository.save(userConvertor.signUpUser(signUpUserDto, passwordEncoder.encode(signUpUserDto.password)))
+        val user: User =
+            userRepository.save(userConvertor.signUpUser(signUpUserDto, passwordEncoder.encode(signUpUserDto.password)))
 
         userPartRepository.save(userConvertor.setUserPart(user, signUpUserDto.part, signUpUserDto.generation))
 
-        val userId : Long = user.id!!
+        val userId: Long = user.id
 
-        return userConvertor.tokenResponse(userId, jwtService.createToken(userId), jwtService.createRefreshToken(userId))
+        return userConvertor.tokenResponse(
+            userId,
+            jwtService.createToken(userId),
+            jwtService.createRefreshToken(userId)
+        )
     }
 
     fun logInUser(loginUserDto: AuthReq.LoginUserDto): AuthRes.UserTokenDto {
-        val user : User = userAdapter.findByUsername(loginUserDto.email)
+        val user: User = userAdapter.findByUsername(loginUserDto.email)
 
-        if(!passwordEncoder.matches(loginUserDto.password, user.password)) throw BadRequestException(LoginUserErrorCode.NOT_CORRECT_PASSWORD)
+        if (!passwordEncoder.matches(
+                loginUserDto.password,
+                user.password
+            )
+        ) throw BadRequestException(LoginUserErrorCode.NOT_CORRECT_PASSWORD)
 
-        val userId : Long = user.id!!
+        val userId: Long = user.id
 
-        return userConvertor.tokenResponse(userId, jwtService.createToken(userId), jwtService.createRefreshToken(userId))
+        return userConvertor.tokenResponse(
+            userId,
+            jwtService.createToken(userId),
+            jwtService.createRefreshToken(userId)
+        )
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.cmc_be.domain.user.entity
 
 import com.example.cmc_be.common.dto.BaseEntity
-import com.example.cmc_be.domain.user.enums.Generation
 import com.example.cmc_be.domain.user.enums.Part
 import jakarta.persistence.*
 import org.hibernate.annotations.BatchSize
@@ -19,7 +18,7 @@ data class UserPart(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false, updatable = false)
     private val user: User,
-    @Enumerated(EnumType.STRING) val part : Part,
-    @Enumerated(EnumType.STRING) val generation : Generation,
+    @Enumerated(EnumType.STRING) val part: Part,
+    val generation: Int,
 ) : BaseEntity() {
 }

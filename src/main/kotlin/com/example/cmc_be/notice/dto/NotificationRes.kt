@@ -1,11 +1,10 @@
 package com.example.cmc_be.notice.dto
 
 class NotificationRes {
-    class NotificationDto {
+    data class NotificationDto(
+        val week: Int,
+        val title: String,
+        val notionUrl: String,
+    )
 
-    }
-
-    class PostNotificationResponseDto {
-
-    }
 }
