@@ -69,3 +69,7 @@ tasks.withType<Jar> {
     enabled = false
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
+
+tasks.jar {
+    enabled = false
+}
