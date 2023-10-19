@@ -1,6 +1,7 @@
 package com.example.cmc_be.notice.service
 
 import com.example.cmc_be.common.exeption.NotFoundException
+import com.example.cmc_be.common.response.PageResponse
 import com.example.cmc_be.domain.generation.repository.GenerationWeeksInfoRepository
 import com.example.cmc_be.domain.notification.exception.NotificationExceptionErrorCode
 import com.example.cmc_be.domain.notification.repository.NotificationRepository
@@ -8,8 +9,9 @@ import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.notice.convertor.NotificationConvertor
 import com.example.cmc_be.notice.dto.NotificationReq
 import com.example.cmc_be.notice.dto.NotificationRes
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 @Service
 class NotificationService(
@@ -18,25 +20,32 @@ class NotificationService(
     private val notificationConvertor: NotificationConvertor
 ) {
     fun getThisWeekNotification(user: User): NotificationRes.NotificationDto {
-        val generationWeeksInfo = generationWeekRepository.findAllByGeneration(user.nowGeneration)
-        val notification = notificationRepository.findTopByGenerationWeeksInfoInOrderById(generationWeeksInfo)
-            ?: throw NotFoundException(NotificationExceptionErrorCode.NOT_FOUND_LATEST_NOTIFICATION)
-
-        return if (
-            !(LocalDate.now().isAfter(notification.generationWeeksInfo.weekEnd))
-            && !(LocalDate.now().isBefore(notification.generationWeeksInfo.weekStart))
-        ) {
-            notificationConvertor.getNotification(notification)
-        } else {
+        val notification = notificationRepository.findAllByGenerationWeeksInfoGeneration(
+            user.nowGeneration, PageRequest.of(0, 1, Sort.by("id").descending()),
+        )
+        return if (notification.isEmpty) {
             throw NotFoundException(NotificationExceptionErrorCode.NOT_FOUND_LATEST_NOTIFICATION)
+        } else {
+            notificationConvertor.getNotification(notification.first())
         }
     }
 
     fun getAllNotification(user: User): List<NotificationRes.NotificationDto> {
-        return generationWeekRepository.findAllByGeneration(user.nowGeneration)
-            .let { notificationRepository.findAllByGenerationWeeksInfoIn(it) }
-            .sortedByDescending { it.id }
-            .map(notificationConvertor::getNotification)
+        return notificationRepository.findAllByGenerationWeeksInfoGeneration(
+            generation = user.nowGeneration,
+            sort = Sort.by("id").descending()
+        ).map(notificationConvertor::getNotification)
+    }
+
+    fun getNotificationPaging(user: User, page: Int, size: Int): PageResponse<NotificationRes.NotificationDto> {
+        val notificationPaging = notificationRepository.findAllByGenerationWeeksInfoGeneration(
+            user.nowGeneration, PageRequest.of(page, size, Sort.by("id").descending()),
+        )
+        return PageResponse(
+            isLast = notificationPaging.isLast,
+            totalCnt = notificationRepository.count(),
+            contents = notificationPaging.toList().map(notificationConvertor::getNotificationPaging)
+        )
     }
 
     fun postNotification(notificationInfo: NotificationReq.NotificationInfo): String {

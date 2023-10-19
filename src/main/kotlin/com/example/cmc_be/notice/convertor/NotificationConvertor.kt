@@ -27,4 +27,12 @@ class NotificationConvertor {
             notionUrl = notificationInfo.notionUrl
         )
     }
+
+    fun getNotificationPaging(notification: Notification): NotificationRes.NotificationDto {
+        return NotificationRes.NotificationDto(
+            title = notification.title,
+            notionUrl = notification.notionUrl,
+            week = notification.generationWeeksInfo.week
+        )
+    }
 }

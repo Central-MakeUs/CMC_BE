@@ -12,5 +12,5 @@ data class PageResponse<T>(
     val totalCnt: Long = 0,
 
     @Schema(description = "요소", required = true, example = "true")
-    val contents: T
+    val contents: List<T> = emptyList()
 )
