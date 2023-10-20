@@ -4,6 +4,3 @@ jwt:
   refresh: ${JWT_REFRESH_KEY}
   access-token-seconds: 31536000
   refresh-token-seconds: 31536000
-
-qr:
-  key: ${QR_SECRET_KEY}

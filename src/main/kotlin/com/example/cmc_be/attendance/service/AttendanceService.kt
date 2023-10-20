@@ -33,9 +33,7 @@ class AttendanceService(
 
 
     fun setAttendance(user: User, code: AttendanceReq.AttendanceCode): String {
-        val (generation, week, hour) = qrCodeService.parseCode(code.code)
-        val attendanceHour = AttendanceHour.of(hour)
-
+        val (generation, week, attendanceHour) = qrCodeService.parseCode(code.code)
         validateGeneration(user, generation)
         validateAlreadyAttendance(user.id, week, attendanceHour)
 

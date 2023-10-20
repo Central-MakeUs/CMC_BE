@@ -5,10 +5,10 @@ import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 
 enum class AttendanceHour(
     val value: String,
-    val hour: String
+    val hour: Int
 ) {
-    FIRST_HOUR("FIRST HOUR", "1차시"),
-    SECOND_HOUR("SECOND HOUR", "2차시");
+    FIRST_HOUR("FIRST HOUR", 1),
+    SECOND_HOUR("SECOND HOUR", 2);
 
     companion object {
         fun of(intHour: Int): AttendanceHour {
