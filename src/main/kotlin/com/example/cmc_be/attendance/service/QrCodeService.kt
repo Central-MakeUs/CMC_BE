@@ -7,6 +7,7 @@ import com.example.cmc_be.domain.attendance.enums.AttendanceHour
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 import com.example.cmc_be.domain.attendance.repository.AttendanceCodeRepository
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
@@ -51,10 +52,17 @@ class QrCodeService(
     fun parseCode(code: String): Triple<Int, Int, AttendanceHour> {
         val attendanceCode = attendanceCodeRepository.findByIdOrNull(code)
             ?: throw NotFoundException(AttendanceErrorCode.NOT_EXIST_ATTENDANCE_CODE)
-        attendanceCode.validate()
+        val exception = attendanceCode.validate()
+        if (exception != null) throw exception
         return Triple(attendanceCode.generation, attendanceCode.week, attendanceCode.hour)
     }
 
+    @Scheduled(cron = "0 2 * * *")
+    fun deleteObjectsOutsideTimeRange() {
+        val attendanceCodes = attendanceCodeRepository.findAll()
+        val invalideAttendanceCodes = attendanceCodes.filter { attendanceCode -> attendanceCode.validate() != null }
+        attendanceCodeRepository.deleteAll(invalideAttendanceCodes)
+    }
 
     companion object {
         private const val CODE_CHARACTERS = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
