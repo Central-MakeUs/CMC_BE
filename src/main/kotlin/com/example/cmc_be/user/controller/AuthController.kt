@@ -1,6 +1,6 @@
 package com.example.cmc_be.user.controller
 
-import com.backend.cmcapi.common.annotation.ApiErrorCodeExample
+import ApiErrorCodeExample
 import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.domain.user.exeption.LoginUserErrorCode
 import com.example.cmc_be.domain.user.exeption.SignUpUserErrorCode

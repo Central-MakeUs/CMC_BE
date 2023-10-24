@@ -1,6 +1,6 @@
 package com.example.cmc_be.common.contorller
 
-import com.backend.cmcapi.common.annotation.ApiErrorCodeExample
+import ApiErrorCodeExample
 import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
