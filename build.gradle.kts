@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.jpa") version "1.8.22"
 }
 
+
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
@@ -66,7 +67,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Jar> {
-    enabled = false
+    enabled = true
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
