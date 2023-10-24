@@ -9,11 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
 @ComponentScan(basePackages = ["com.example.cmc_be"])
 @ComponentScan(basePackageClasses = [OpenApiConfig::class, SecurityConfig::class])
 @OpenAPIDefinition(servers = [Server(url = "\${server.servlet.context-path}", description = "Default Server URL")])
+@EnableScheduling
 class CmcBeApplication
 
 fun main(args: Array<String>) {
