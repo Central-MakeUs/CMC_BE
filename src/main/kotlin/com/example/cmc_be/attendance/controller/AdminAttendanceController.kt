@@ -21,15 +21,26 @@ class AdminAttendanceController(
 ) {
     @PostMapping("/code")
     @Operation(summary = "03-01 출석용 코드 생성(중복 생성 가능)")
-    fun getAttendanceList(
+    fun generateCode(
         @AuthenticationPrincipal user: User,
         @RequestBody gernerateCode: AttendanceReq.GenerateCode
     ): CommonResponse<String> {
         return CommonResponse.onSuccess(qrCodeService.generateCode(gernerateCode))
     }
 
+    @GetMapping("/code")
+    @Operation(summary = "03-02 코드 정보 조회")
+    fun getCodeInfo(
+        @AuthenticationPrincipal user: User,
+        @Parameter(description = "코드", example = "8dFsb")
+        @RequestParam code: String,
+    ): CommonResponse<AttendanceRes.AttendanceCodeDto> {
+        return CommonResponse.onSuccess(qrCodeService.getCodeInfo(code))
+    }
+
+
     @GetMapping("/all")
-    @Operation(summary = "03-02 기수별 모든 출석 현황 체크")
+    @Operation(summary = "03-03 기수별 모든 출석 현황 체크")
     fun getParticipantsAttendance(
         @AuthenticationPrincipal user: User,
         @Parameter(description = "기수", example = "13") @RequestParam generation: Int,

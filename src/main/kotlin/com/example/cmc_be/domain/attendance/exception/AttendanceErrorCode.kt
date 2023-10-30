@@ -15,8 +15,8 @@ enum class AttendanceErrorCode(
     NOT_EXIST_HOUR(HttpStatus.NOT_FOUND, "ATTENDANCE002", "존재 하지 않는 출석 차례입니다."),
     CANNOT_ACCESS_ATEENDANCE(HttpStatus.BAD_REQUEST, "ATTENDANCE003", "출석 불가능한 기수입니다."),
     NOT_EXIST_ATTENDANCE_CODE(HttpStatus.NOT_FOUND, "ATTENDANCE004", "존재 하지 않는 출석 차례입니다."),
-    OVERDUE_DATE(HttpStatus.BAD_REQUEST, "ATTENDANCE005", "유호 시간이 지난 출석 코드입니다."),
-    INVALIDE_DATE(HttpStatus.BAD_REQUEST, "ATTENDANCE005", "유효하지 않은 출석 코드입니다.");
+    OVERDUE_DATE(HttpStatus.BAD_REQUEST, "ATTENDANCE005", "유호 시간에 맞지 않은 출석 코드입니다."),
+    INVALID_CODE(HttpStatus.BAD_REQUEST, "ATTENDANCE006", "유효하지 않은 출석 코드입니다.");
 
     override val errorReason: ErrorReason
         get() = ErrorReason(

@@ -20,6 +20,8 @@ class AttendanceReq {
         val availableDate: LocalDate,
         val startTime: HourAndMinute,
         val endTime: HourAndMinute,
+        @Schema(example = "15")
+        val lateMinute: Long,
     )
 
     data class HourAndMinute(

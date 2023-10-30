@@ -3,7 +3,9 @@ package com.example.cmc_be.attendance.convertor
 import com.example.cmc_be.attendance.dto.AttendanceRes
 import com.example.cmc_be.common.annotation.Convertor
 import com.example.cmc_be.domain.attendance.entity.Attendance
+import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
+import com.example.cmc_be.domain.attendance.enums.AttendanceStatus
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
 
@@ -12,22 +14,20 @@ class AttendanceConverter {
 
     fun getAttendanceList(
         allGenerationWeeksInfo: List<GenerationWeeksInfo>,
-        allAttendanceData: Map<Int, List<Attendance>>
+        userAllAttendanceData: Map<Int, List<Attendance>>
     ) = allGenerationWeeksInfo.map {
         val week = it.week
-        if (allAttendanceData[week] == null) {
-            AttendanceRes.AttendanceInfoDto(
-                week = week,
-                firstHour = false,
-                secondHour = false
-            )
-        } else {
-            AttendanceRes.AttendanceInfoDto(
-                week = week,
-                firstHour = (allAttendanceData[week]?.any { it.attendanceHour == AttendanceHour.FIRST_HOUR }) == true,
-                secondHour = (allAttendanceData[week]?.any { it.attendanceHour == AttendanceHour.SECOND_HOUR }) == true,
-            )
-        }
+        val firstHour =
+            (userAllAttendanceData[week]?.find { it.attendanceHour == AttendanceHour.FIRST_HOUR })?.attendanceStatus
+                ?: AttendanceStatus.ABSENT
+        val secondHour =
+            (userAllAttendanceData[week]?.find { it.attendanceHour == AttendanceHour.SECOND_HOUR })?.attendanceStatus
+                ?: AttendanceStatus.ABSENT
+        AttendanceRes.AttendanceInfoDto(
+            week = week,
+            firstHour = firstHour,
+            secondHour = secondHour,
+        )
     }
 
     fun getParticipantsAttendance(
@@ -41,14 +41,29 @@ class AttendanceConverter {
             role = user.role,
             nickname = user.nickname,
             attandances = allGeneration.map { generationInfo ->
-                val userWeekAttendances =
+                val userAllAttendanceData =
                     userAttandances.filter { it.generationWeeksInfo.week == generationInfo.week }
+                val firstHour =
+                    (userAllAttendanceData.find { it.attendanceHour == AttendanceHour.FIRST_HOUR })?.attendanceStatus
+                        ?: AttendanceStatus.ABSENT
+                val secondHour =
+                    (userAllAttendanceData.find { it.attendanceHour == AttendanceHour.SECOND_HOUR })?.attendanceStatus
+                        ?: AttendanceStatus.ABSENT
                 AttendanceRes.AttendanceInfoDto(
                     week = generationInfo.week,
-                    firstHour = userWeekAttendances.any { it.attendanceHour == AttendanceHour.FIRST_HOUR },
-                    secondHour = userWeekAttendances.any { it.attendanceHour == AttendanceHour.SECOND_HOUR }
+                    firstHour = firstHour,
+                    secondHour = secondHour
                 )
             }
+        )
+    }
+
+    fun getCodeInfo(codeInfo: AttendanceCode): AttendanceRes.AttendanceCodeDto {
+        return AttendanceRes.AttendanceCodeDto(
+            availableDate = codeInfo.availableDate,
+            startTime = codeInfo.startTime,
+            endTime = codeInfo.endTime,
+            lateMinute = codeInfo.lateMinute
         )
     }
 

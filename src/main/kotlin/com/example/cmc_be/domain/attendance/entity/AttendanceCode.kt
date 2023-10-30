@@ -1,7 +1,6 @@
 package com.example.cmc_be.domain.attendance.entity
 
 import com.example.cmc_be.common.exeption.BadRequestException
-import com.example.cmc_be.common.exeption.BaseException
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 import jakarta.persistence.*
@@ -28,18 +27,26 @@ data class AttendanceCode(
     val availableDate: LocalDate,
     val startTime: LocalTime,
     val endTime: LocalTime,
+    val lateMinute: Long,
 ) {
-    fun validate(): BaseException? {
+    fun validate(): BadRequestException? {
         val currentDateTime = ZonedDateTime.now(ZoneId.systemDefault())
         val currentDate = currentDateTime.toLocalDate()
         val currentTime = currentDateTime.toLocalTime()
 
         if (!currentDate.isEqual(availableDate)) {
-            return BadRequestException(AttendanceErrorCode.INVALIDE_DATE)
+            return BadRequestException(AttendanceErrorCode.INVALID_CODE)
         }
-        if (currentTime.isBefore(startTime) || currentTime.isAfter(endTime)) {
+        if (currentTime.isBefore(startTime) || currentTime.isAfter(endTime.plusMinutes(lateMinute))) {
             return BadRequestException(AttendanceErrorCode.OVERDUE_DATE)
         }
         return null
     }
+
+    fun isLate(): Boolean {
+        val currentDateTime = ZonedDateTime.now(ZoneId.systemDefault())
+        val currentTime = currentDateTime.toLocalTime()
+        return (currentTime.isBefore(endTime.plusMinutes(lateMinute + 1)) && currentTime.isAfter(endTime))
+    }
+
 }

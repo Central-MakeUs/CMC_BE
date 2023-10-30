@@ -29,7 +29,6 @@ class Attendance(
     val attendanceStatus: AttendanceStatus,
     @Enumerated(EnumType.STRING)
     val attendanceHour: AttendanceHour
-
 ) : BaseEntity() {
 
 }

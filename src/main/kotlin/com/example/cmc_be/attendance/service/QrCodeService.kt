@@ -1,11 +1,15 @@
 package com.example.cmc_be.attendance.service
 
+import com.example.cmc_be.attendance.convertor.AttendanceConverter
 import com.example.cmc_be.attendance.dto.AttendanceReq
+import com.example.cmc_be.attendance.dto.AttendanceRes
+import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 import com.example.cmc_be.domain.attendance.repository.AttendanceCodeRepository
+import com.example.cmc_be.domain.user.entity.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -13,7 +17,9 @@ import kotlin.random.Random
 
 @Service
 class QrCodeService(
-    private val attendanceCodeRepository: AttendanceCodeRepository
+    private val attendanceCodeRepository: AttendanceCodeRepository,
+    private val attendanceCodeValidator: AttendanceCodeValidator,
+    private val attendanceCodeConverter: AttendanceConverter
 ) {
 
     fun generateCode(generationReq: AttendanceReq.GenerateCode): String {
@@ -27,6 +33,7 @@ class QrCodeService(
                     startTime = generationReq.startTime.toLocalTime(),
                     availableDate = generationReq.availableDate,
                     endTime = generationReq.endTime.toLocalTime(),
+                    lateMinute = generationReq.lateMinute
                 )
             )
         }
@@ -46,23 +53,34 @@ class QrCodeService(
             .joinToString("")
     }
 
-    /**
-     * @return Triple<기수, 주차, 출석 차례>
-     */
-    fun parseCode(code: String): Triple<Int, Int, AttendanceHour> {
-        val attendanceCode = attendanceCodeRepository.findByIdOrNull(code)
+    fun getCode(code: String): AttendanceCode {
+        return attendanceCodeRepository.findByIdOrNull(code)
             ?: throw NotFoundException(AttendanceErrorCode.NOT_EXIST_ATTENDANCE_CODE)
-        val exception = attendanceCode.validate()
-        if (exception != null) throw exception
-        return Triple(attendanceCode.generation, attendanceCode.week, attendanceCode.hour)
     }
 
-    @Scheduled(cron = "0 2 * * *")
+    @Scheduled(cron = "0 0 2 * * *")
     fun deleteObjectsOutsideTimeRange() {
         val attendanceCodes = attendanceCodeRepository.findAll()
         val invalideAttendanceCodes = attendanceCodes.filter { attendanceCode -> attendanceCode.validate() != null }
         attendanceCodeRepository.deleteAll(invalideAttendanceCodes)
     }
+
+    fun getCodeInfo(code: String): AttendanceRes.AttendanceCodeDto =
+        attendanceCodeConverter.getCodeInfo(
+            attendanceCodeRepository.findByIdOrNull(code) ?: throw BadRequestException(
+                AttendanceErrorCode.INVALID_CODE
+            )
+        )
+
+    fun validateCode(user: User, attendanceCode: AttendanceCode) {
+        with(attendanceCodeValidator) {
+            validateGeneration(user, attendanceCode.generation)
+            validateAlreadyAttendance(user.id, attendanceCode)
+        }
+        val validateCodeException = attendanceCode.validate()
+        if (validateCodeException != null) throw validateCodeException
+    }
+
 
     companion object {
         private const val CODE_CHARACTERS = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
