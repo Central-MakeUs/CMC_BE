@@ -2,7 +2,7 @@ name: dev CMC API Server BeanStalk CI/CD
 
 on:
   push:
-    branches: [dev]
+    branches: [ dev ]
   workflow_dispatch: # 수동 실행 옵션 (생략)
 
 jobs:
