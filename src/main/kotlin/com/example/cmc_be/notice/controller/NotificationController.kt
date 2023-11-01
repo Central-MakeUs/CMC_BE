@@ -28,10 +28,10 @@ class NotificationController(
     @GetMapping("/all")
     @Operation(summary = "02-02 본인 기수 전체 공지 조회")
     fun getAllNotification(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes.NotificationDto>> {
-        return CommonResponse.onSuccess(notificationService.getAllNotification(user))
+        return CommonResponse.onSuccess(notificationService.getAllNotification(user.nowGeneration))
     }
 
-    @GetMapping()
+    @GetMapping
     @Operation(summary = "02-03 본인 기수 공지 페이징 조회")
     fun getAllNotificationPaging(
         @AuthenticationPrincipal user: User,
@@ -40,4 +40,5 @@ class NotificationController(
     ): CommonResponse<PageResponse<NotificationRes.NotificationDto>> {
         return CommonResponse.onSuccess(notificationService.getNotificationPaging(user, page, size))
     }
+
 }
