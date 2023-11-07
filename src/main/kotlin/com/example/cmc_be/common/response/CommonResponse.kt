@@ -15,7 +15,7 @@ data class CommonResponse<T>(
     val message: String,
     @Schema(description = "응답 코드", required = true, example = "1000")
     val code: String,
-    @Schema(description = "응답 결과", required = false, example = "응답 결과")
+    @Schema(description = "응답 결과", required = false)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val result: T? // result를 nullable로 변경
 ) {
