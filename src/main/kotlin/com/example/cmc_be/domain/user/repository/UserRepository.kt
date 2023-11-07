@@ -7,4 +7,5 @@ import java.util.*
 interface UserRepository : JpaRepository<User, Long> {
     fun existsByUsername(email: String): Boolean
     fun findByUsername(email: String): Optional<User>
+    fun findAllByNowGeneration(nowGeneration: Int): List<User>
 }
