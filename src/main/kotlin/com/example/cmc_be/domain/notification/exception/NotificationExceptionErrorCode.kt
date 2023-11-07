@@ -12,7 +12,7 @@ enum class NotificationExceptionErrorCode(
 ) : BaseErrorCode {
 
     NOT_FOUND_GENERATION(HttpStatus.BAD_REQUEST, "NOTI001", "해당 주차정보가 존재하지 않습니다."),
-    NOT_FOUND_LATEST_NOTIFICATION(HttpStatus.BAD_REQUEST, "NOTI002", "해당 주차의 공지가 존재하지 않습니다.");
+    NOT_FOUND_LATEST_NOTIFICATION(HttpStatus.BAD_REQUEST, "NOTI002", "공지가 존재하지 않습니다.");
 
     override val errorReason: ErrorReason
         get() = ErrorReason(
