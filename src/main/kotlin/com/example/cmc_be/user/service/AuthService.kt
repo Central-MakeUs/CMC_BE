@@ -5,6 +5,7 @@ import com.example.cmc_be.common.security.JwtService
 import com.example.cmc_be.domain.user.adaptor.UserAdapter
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.exeption.LoginUserErrorCode
+import com.example.cmc_be.domain.user.exeption.SignUpUserErrorCode
 import com.example.cmc_be.domain.user.repository.UserPartRepository
 import com.example.cmc_be.domain.user.repository.UserRepository
 import com.example.cmc_be.user.convertor.UserConvertor
@@ -57,6 +58,10 @@ class AuthService(
             jwtService.createToken(userId),
             jwtService.createRefreshToken(userId)
         )
+    }
+
+    fun checkEmail(email: String) {
+        if(userRepository.existsByUsername(email)) throw BadRequestException(SignUpUserErrorCode.EXISTS_USER_EMAIL);
     }
 
 }
