@@ -20,12 +20,29 @@ jobs:
           distribution: 'temurin'
 
 
+      - name: Set Environment - Common Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-common.yml
+        env:
+          jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
+          jwt.refresh: ${{ secrets.JWT_REFRESH_KEY }}
+
+      - name: Set Environment Domain - Domain DEV Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-domain-dev.yml
+        env:
+          spring.datasource.url: ${{ secrets.DEV_DB_URL_HOST }}
+          spring.datasource.username: ${{ secrets.AWS_DB_USER_NAME }}
+          spring.datasource.password: ${{ secrets.AWS_DB_PASSWORD }}
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew build
         shell: bash
 
       - name: Get current time
@@ -43,3 +60,15 @@ jobs:
           cp -r .ebextensions-dev deploy/.ebextensions
           cp -r .platform deploy/.platform
           cd deploy && zip -r cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
+
+      - name: Deploy Consumer to EB
+        uses: einaregilsson/beanstalk-deploy@v19
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: CmcApiServerDev
+          environment_name: CmcApiServerDev-env
+          version_label: cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
+          region: ap-northeast-2
+          deployment_package: deploy/cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
+          wait_for_deployment: false

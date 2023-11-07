@@ -1,6 +1,6 @@
 package com.example.cmc_be.common.contorller
 
-import com.backend.cmcapi.common.annotation.ApiErrorCodeExample
+import ApiErrorCodeExample
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.errorcode.TestErrorCode
 import com.example.cmc_be.common.response.CommonResponse

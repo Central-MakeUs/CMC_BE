@@ -1,6 +1,6 @@
 package com.example.cmc_be.config.swagger
 
-import com.backend.cmcapi.common.annotation.ApiErrorCodeExample
+import ApiErrorCodeExample
 import com.example.cmc_be.common.exeption.errorcode.BaseErrorCode
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
