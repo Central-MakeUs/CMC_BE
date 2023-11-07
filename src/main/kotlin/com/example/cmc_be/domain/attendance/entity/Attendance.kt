@@ -18,18 +18,17 @@ import org.hibernate.annotations.DynamicUpdate
 class Attendance(
     @Id
     @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0L,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false, updatable = false)
     val user: User,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "weekId", nullable = false, updatable = false)
-    val week: GenerationWeeksInfo,
+    val generationWeeksInfo: GenerationWeeksInfo,
     @Enumerated(EnumType.STRING)
     val attendanceStatus: AttendanceStatus,
     @Enumerated(EnumType.STRING)
     val attendanceHour: AttendanceHour
-
 ) : BaseEntity() {
 
 }
