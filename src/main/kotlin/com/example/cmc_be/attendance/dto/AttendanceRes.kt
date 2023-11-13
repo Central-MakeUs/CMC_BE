@@ -21,7 +21,7 @@ class AttendanceRes {
 
     data class AllAttendanceInfoDto(
         val name: String,
-        val role: UserRole,
+        val role: String,
         val nickname: String,
         val attandances: List<AttendanceInfoDto>
     )
