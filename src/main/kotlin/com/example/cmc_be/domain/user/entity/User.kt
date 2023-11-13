@@ -27,7 +27,7 @@ data class User(
     val name: String,
     @Column(name = "nickname")
     val nickname: String,
-    @Enumerated(EnumType.STRING) val role: UserRole = UserRole.ROLE_USER,
+    val role: String = UserRole.ROLE_USER.value,
     val nowGeneration: Int,
     @Enumerated(EnumType.STRING) val signUpApprove: SignUpApprove = SignUpApprove.NOT,
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -36,7 +36,7 @@ data class User(
 ) : UserDetails, BaseEntity() {
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return role.value.split(",").map { SimpleGrantedAuthority(it) }
+        return role.split(",").map { SimpleGrantedAuthority(it) }
     }
 
     override fun getPassword(): String = password
