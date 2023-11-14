@@ -1,5 +1,3 @@
-package com.backend.cmcapi.common.annotation
-
 import com.example.cmc_be.common.exeption.errorcode.BaseErrorCode
 import kotlin.reflect.KClass
 
