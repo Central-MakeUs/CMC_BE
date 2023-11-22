@@ -4,3 +4,23 @@ jwt:
   refresh: ${JWT_REFRESH_KEY}
   access-token-seconds: 31536000
   refresh-token-seconds: 31536000
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: central@makeus.in
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
