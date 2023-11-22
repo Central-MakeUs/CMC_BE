@@ -1,4 +1,8 @@
 spring:
+  data:
+    redis:
+      host: {REDIS_HOST}
+      port: 6379
   config:
     activate:
       on-profile: dev
