@@ -1,7 +1,7 @@
 spring:
   data:
     redis:
-      host: ${REDIS_PROD_HOST}
+      host: {REDIS_HOST}
       port: 6379
   config:
     activate:

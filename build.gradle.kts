@@ -53,6 +53,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     implementation("io.github.microutils:kotlin-logging:3.0.5")
+
+    implementation ("org.springframework.boot:spring-boot-starter-mail")
+
+    implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation ("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 }
 
 tasks.withType<KotlinCompile> {
