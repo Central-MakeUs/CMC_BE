@@ -27,6 +27,7 @@ jobs:
         env:
           jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
           jwt.refresh: ${{ secrets.JWT_REFRESH_KEY }}
+          spring.mail.password: ${{ secrets.MAIL_PASSWORD}}
 
       - name: Set Environment Domain - Domain DEV Yml
         uses: microsoft/variable-substitution@v1
@@ -36,6 +37,7 @@ jobs:
           spring.datasource.url: ${{ secrets.DEV_DB_URL_HOST }}
           spring.datasource.username: ${{ secrets.AWS_DB_USER_NAME }}
           spring.datasource.password: ${{ secrets.AWS_DB_PASSWORD }}
+          spring.data.redis.host: ${{ secrets.DEV_REDIS_HOST }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
