@@ -1,6 +1,7 @@
 package com.example.cmc_be.user.convertor
 
 import com.example.cmc_be.common.annotation.Convertor
+import com.example.cmc_be.domain.redis.entity.CodeAuth
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.entity.UserPart
 import com.example.cmc_be.domain.user.enums.Part
@@ -32,6 +33,14 @@ class UserConvertor {
             userId = userId,
             accessToken = accessToken,
             refreshToken = refreshToken
+        )
+    }
+
+    fun convertToCodeAuth(email: String, code: String): CodeAuth {
+        return CodeAuth(
+            auth = email,
+            code = code,
+            ttl = 300L
         )
     }
 }
