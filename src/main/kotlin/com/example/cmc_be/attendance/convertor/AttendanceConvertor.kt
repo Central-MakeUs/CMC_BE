@@ -34,6 +34,7 @@ class AttendanceConverter {
                 firstHour = firstHour,
                 secondHour = secondHour,
                 isOffline = generationWeekInfo.isOffline,
+                date = generationWeekInfo.date,
                 enable = currentDate.isAfter(generationWeekInfo.date.minusDays(1L))
             )
         }
@@ -54,9 +55,9 @@ class AttendanceConverter {
         allGeneration: List<GenerationWeeksInfo>
     ) = allUsers.map { user ->
         val userAttandances = allAttendances.filter { it.user.id == user.id }
-        val attendances = allGeneration.map { generationInfo ->
+        val attendances = allGeneration.map { generationWeekInfo ->
             val userAllAttendanceData =
-                userAttandances.filter { it.generationWeeksInfo.week == generationInfo.week }
+                userAttandances.filter { it.generationWeeksInfo.week == generationWeekInfo.week }
             val firstHour =
                 (userAllAttendanceData.find { it.attendanceHour == AttendanceHour.FIRST_HOUR })?.attendanceCategory
                     ?: AttendanceCategory.ABSENT
@@ -64,11 +65,12 @@ class AttendanceConverter {
                 (userAllAttendanceData.find { it.attendanceHour == AttendanceHour.SECOND_HOUR })?.attendanceCategory
                     ?: AttendanceCategory.ABSENT
             AttendanceRes.AttendanceInfoDto(
-                week = generationInfo.week,
+                week = generationWeekInfo.week,
                 firstHour = firstHour,
                 secondHour = secondHour,
-                isOffline = generationInfo.isOffline,
-                enable = true
+                isOffline = generationWeekInfo.isOffline,
+                date = generationWeekInfo.date,
+                enable = true,
             )
         }
         AttendanceRes.AllAttendanceInfoDto(

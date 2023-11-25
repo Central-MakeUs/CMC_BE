@@ -11,6 +11,7 @@ class AttendanceRes {
         val secondHour: AttendanceCategory,
         val isOffline: Boolean,
         val enable: Boolean,
+        val date: LocalDate
     )
 
     data class AttendanceCodeDto(
