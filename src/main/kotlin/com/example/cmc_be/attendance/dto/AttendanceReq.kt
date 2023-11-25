@@ -1,7 +1,6 @@
 package com.example.cmc_be.attendance.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
-import java.time.LocalDate
 import java.time.LocalTime
 
 class AttendanceReq {
@@ -17,7 +16,6 @@ class AttendanceReq {
         val week: Int,
         @Schema(example = "1")
         val hour: Int,
-        val availableDate: LocalDate,
         val startTime: HourAndMinute,
         val endTime: HourAndMinute,
         @Schema(example = "15")

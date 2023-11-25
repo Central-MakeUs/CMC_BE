@@ -1,8 +1,8 @@
 package com.example.cmc_be.domain.attendance.entity
 
 import com.example.cmc_be.common.dto.BaseEntity
+import com.example.cmc_be.domain.attendance.enums.AttendanceCategory
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
-import com.example.cmc_be.domain.attendance.enums.AttendanceStatus
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
 import jakarta.persistence.*
@@ -23,10 +23,10 @@ class Attendance(
     @JoinColumn(name = "userId", nullable = false, updatable = false)
     val user: User,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "weekId", nullable = false, updatable = false)
+    @JoinColumn(name = "generationWeeksInfoId", nullable = false, updatable = false)
     val generationWeeksInfo: GenerationWeeksInfo,
     @Enumerated(EnumType.STRING)
-    val attendanceStatus: AttendanceStatus,
+    val attendanceCategory: AttendanceCategory,
     @Enumerated(EnumType.STRING)
     val attendanceHour: AttendanceHour
 ) : BaseEntity() {

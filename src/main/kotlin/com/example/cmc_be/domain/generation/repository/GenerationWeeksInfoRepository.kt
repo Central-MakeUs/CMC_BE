@@ -8,4 +8,6 @@ interface GenerationWeeksInfoRepository : JpaRepository<GenerationWeeksInfo, Lon
     fun findAllByGeneration(generation: Int): List<GenerationWeeksInfo>
 
     fun findByGenerationAndWeek(generation: Int, week: Int): GenerationWeeksInfo?
+
+    fun findFirstByGenerationAndWeek(generation: Int, week: Int): GenerationWeeksInfo?
 }

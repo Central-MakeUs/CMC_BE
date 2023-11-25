@@ -11,9 +11,8 @@ class GenerationConvertor {
         return GenerationWeeksInfo(
             generation = generationInfo.generation,
             week = generationInfo.week,
-            weekStart = generationInfo.weekStart,
-            weekEnd = generationInfo.weekEnd,
-            attendanceDate = generationInfo.attendanceDate
+            date = generationInfo.date,
+            isOffline = generationInfo.isOffline
         )
     }
 }

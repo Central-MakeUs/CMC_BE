@@ -4,7 +4,10 @@ import com.example.cmc_be.attendance.dto.AttendanceReq
 import com.example.cmc_be.attendance.dto.AttendanceRes
 import com.example.cmc_be.attendance.service.AttendanceService
 import com.example.cmc_be.attendance.service.QrCodeService
+import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
+import com.example.cmc_be.domain.generation.repository.GenerationWeeksInfoRepository
 import com.example.cmc_be.domain.user.entity.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "ADMIN-03 Attendance 출석 관련 API")
 class AdminAttendanceController(
     private val qrCodeService: QrCodeService,
-    private val attendanceService: AttendanceService
+    private val attendanceService: AttendanceService,
+    private val generationWeeksInfoRepository: GenerationWeeksInfoRepository
 ) {
     @PostMapping("/code")
     @Operation(summary = "03-01 출석용 코드 생성(중복 생성 가능)")
@@ -25,7 +29,16 @@ class AdminAttendanceController(
         @AuthenticationPrincipal user: User,
         @RequestBody gernerateCode: AttendanceReq.GenerateCode
     ): CommonResponse<String> {
-        return CommonResponse.onSuccess(qrCodeService.generateCode(gernerateCode))
+        val generationWeeksInfo = generationWeeksInfoRepository.findFirstByGenerationAndWeek(
+            generation = gernerateCode.generation, week = gernerateCode.week
+        ) ?: throw BadRequestException(AttendanceErrorCode.CANNOT_ACCESS_ATEENDANCE)
+        
+        return CommonResponse.onSuccess(
+            qrCodeService.generateCode(
+                generationReq = gernerateCode,
+                generationWeeksInfo = generationWeeksInfo
+            )
+        )
     }
 
     @GetMapping("/code")

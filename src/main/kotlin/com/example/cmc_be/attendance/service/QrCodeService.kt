@@ -9,6 +9,7 @@ import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 import com.example.cmc_be.domain.attendance.repository.AttendanceCodeRepository
+import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
@@ -22,7 +23,10 @@ class QrCodeService(
     private val attendanceCodeConverter: AttendanceConverter
 ) {
 
-    fun generateCode(generationReq: AttendanceReq.GenerateCode): String {
+    fun generateCode(
+        generationReq: AttendanceReq.GenerateCode,
+        generationWeeksInfo: GenerationWeeksInfo
+    ): String {
         return generateUniqueRandomCode().also { randomCode ->
             attendanceCodeRepository.save(
                 AttendanceCode(
@@ -31,8 +35,8 @@ class QrCodeService(
                     week = generationReq.week,
                     hour = AttendanceHour.of(generationReq.hour),
                     startTime = generationReq.startTime.toLocalTime(),
-                    availableDate = generationReq.availableDate,
                     endTime = generationReq.endTime.toLocalTime(),
+                    generationWeeksInfo = generationWeeksInfo,
                     lateMinute = generationReq.lateMinute
                 )
             )
