@@ -2,12 +2,13 @@ package com.example.cmc_be.user.service
 
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
-import com.example.cmc_be.common.exeption.UnauthorizedException
 import com.example.cmc_be.common.security.JwtService
 import com.example.cmc_be.common.utils.MailService
 import com.example.cmc_be.common.utils.RandomNumber
 import com.example.cmc_be.domain.redis.entity.CodeAuth
+import com.example.cmc_be.domain.redis.entity.RefreshToken
 import com.example.cmc_be.domain.redis.repository.CodeAuthRepository
+import com.example.cmc_be.domain.redis.repository.RefreshTokenRepository
 import com.example.cmc_be.domain.user.adaptor.UserAdapter
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.exeption.*
@@ -17,7 +18,6 @@ import com.example.cmc_be.user.convertor.UserConvertor
 import com.example.cmc_be.user.dto.AuthReq
 import com.example.cmc_be.user.dto.AuthRes
 import jakarta.transaction.Transactional
-import org.aspectj.apache.bcel.classfile.Code
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -30,7 +30,8 @@ class AuthService(
     private val userPartRepository: UserPartRepository,
     private val passwordEncoder: PasswordEncoder,
     private val mailService: MailService,
-    private val codeAuthRepository: CodeAuthRepository
+    private val codeAuthRepository: CodeAuthRepository,
+    private val refreshTokenRepository: RefreshTokenRepository
 ) {
     @Transactional
     fun signUpUser(signUpUserDto: AuthReq.SignUpUserDto): AuthRes.UserTokenDto {
@@ -93,7 +94,18 @@ class AuthService(
         userRepository.save(user)
     }
 
+    fun refreshToken(refreshToken: String): AuthRes.RefreshTokenDto? {
+        val userId = jwtService.getUserIdByRefreshToken(refreshToken)
+        val redisRefreshToken: RefreshToken = refreshTokenRepository.findById(userId.toString()).orElseThrow {
+            BadRequestException(
+                RefreshTokenErrorCode.NOT_EXISTS_REFRESH_TOKEN
+            )
+        }
+        if (redisRefreshToken.refreshToken != refreshToken) throw BadRequestException(RefreshTokenErrorCode.INVALID_REFRESH_TOKEN)
 
+
+        return AuthRes.RefreshTokenDto(jwtService.createToken(userId));
+    }
 
 
 }

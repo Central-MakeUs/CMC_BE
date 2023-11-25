@@ -21,7 +21,6 @@ enum class UserAuthErrorCode(
     RE_LOGIN_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH005", "모든 토큰이 만료되었습니다. 다시 로그인해주세요."),
     INVALID_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH006", "토큰이 올바르지 않습니다."),
     HIJACK_JWT_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "AUTH007", "탈취된(로그아웃 된) 토큰입니다 다시 로그인 해주세요."),
-    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH009", "리프레쉬 토큰이 유효하지 않습니다. 다시 로그인 해주세요"),
     NOT_EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH010", "토큰이 비어있습니다 토큰을 보내주세요"),
     NOT_EXISTS_USER_HAVE_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH011", "해당 토큰을 가진 유저가 존재하지 않습니다."),
     NOT_EXIST_USER(HttpStatus.UNAUTHORIZED, "U009", "해당 유저가 존재하지 않습니다."),

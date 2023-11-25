@@ -4,21 +4,18 @@ import ApiErrorCodeExample
 import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.domain.user.exeption.CheckAuthErrorCode
 import com.example.cmc_be.domain.user.exeption.LoginUserErrorCode
+import com.example.cmc_be.domain.user.exeption.RefreshTokenErrorCode
 import com.example.cmc_be.domain.user.exeption.SendEmailErrorCode
 import com.example.cmc_be.user.dto.AuthReq
 import com.example.cmc_be.user.dto.AuthRes
 import com.example.cmc_be.user.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Tag(name ="00 Auth 유저 인증 관련 API")
@@ -76,8 +73,17 @@ class AuthController(
         return CommonResponse.onSuccess("비밀번호 변경 성공")
     }
 
-    /*
-        비밀번호 찾기
-     */
-
+    @GetMapping("/refresh")
+    @Operation(summary = "00-07 리프레쉬 토큰으로 액세트토큰 재발급")
+    @ApiErrorCodeExample(RefreshTokenErrorCode::class)
+    fun refreshToken(
+        @Parameter(
+            description = "리프레쉬 토큰",
+            required = true,
+            `in` = ParameterIn.HEADER,
+            name = "X-REFRESH-TOKEN",
+            schema = Schema(type = "string")
+        )@RequestHeader("X-REFRESH-TOKEN") refreshToken : String) : CommonResponse<AuthRes.RefreshTokenDto>{
+        return CommonResponse.onSuccess(authService.refreshToken(refreshToken))
+    }
 }

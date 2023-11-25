@@ -14,4 +14,10 @@ class AuthRes {
     ) {
     }
 
+    data class RefreshTokenDto(
+        @Schema(description = "액세스 토큰", required = true, example = "asdkjanwjkldnjk----")
+        val accessToken: String
+    ) {
+    }
+
 }
