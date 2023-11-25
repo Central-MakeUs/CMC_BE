@@ -1,4 +1,4 @@
-package com.example.cmc_be.notice.service
+package com.example.cmc_be.notification.service
 
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.common.response.PageResponse
@@ -7,9 +7,9 @@ import com.example.cmc_be.domain.notification.entity.Notification
 import com.example.cmc_be.domain.notification.exception.NotificationExceptionErrorCode
 import com.example.cmc_be.domain.notification.repository.NotificationRepository
 import com.example.cmc_be.domain.user.entity.User
-import com.example.cmc_be.notice.convertor.NotificationConvertor
-import com.example.cmc_be.notice.dto.NotificationReq
-import com.example.cmc_be.notice.dto.NotificationRes
+import com.example.cmc_be.notification.convertor.NotificationConvertor
+import com.example.cmc_be.notification.dto.NotificationReq
+import com.example.cmc_be.notification.dto.NotificationRes
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull

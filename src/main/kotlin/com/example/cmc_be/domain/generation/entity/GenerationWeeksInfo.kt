@@ -18,7 +18,6 @@ class GenerationWeeksInfo(
     val id: Long = 0L,
     val generation: Int,
     val week: Int,
-    val weekStart: LocalDate,
-    val weekEnd: LocalDate,
-    val attendanceDate: LocalDate
+    val date: LocalDate,
+    val isOffline: Boolean
 ) : BaseEntity()

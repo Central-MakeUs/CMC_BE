@@ -18,7 +18,7 @@ class AttendanceController(
 ) {
     @GetMapping("")
     @Operation(summary = "03-01 출석 현황 조회")
-    fun getAttendanceList(@AuthenticationPrincipal user: User): CommonResponse<List<AttendanceRes.AttendanceInfoDto>> {
+    fun getAttendanceList(@AuthenticationPrincipal user: User): CommonResponse<AttendanceRes.GetAttendances> {
         return CommonResponse.onSuccess(attendanceService.getAttendanceList(user))
     }
 

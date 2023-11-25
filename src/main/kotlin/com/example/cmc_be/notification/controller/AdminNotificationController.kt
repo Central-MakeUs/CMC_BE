@@ -1,10 +1,10 @@
-package com.example.cmc_be.notice.controller
+package com.example.cmc_be.notification.controller
 
 import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.domain.user.entity.User
-import com.example.cmc_be.notice.dto.NotificationReq
-import com.example.cmc_be.notice.dto.NotificationRes
-import com.example.cmc_be.notice.service.NotificationService
+import com.example.cmc_be.notification.dto.NotificationReq
+import com.example.cmc_be.notification.dto.NotificationRes
+import com.example.cmc_be.notification.service.NotificationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal

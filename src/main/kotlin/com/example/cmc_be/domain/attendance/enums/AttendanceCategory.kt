@@ -1,6 +1,6 @@
 package com.example.cmc_be.domain.attendance.enums
 
-enum class AttendanceStatus(
+enum class AttendanceCategory(
     val value: String,
     val status: String
 ) {

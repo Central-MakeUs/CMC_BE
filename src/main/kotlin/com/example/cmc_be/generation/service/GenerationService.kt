@@ -13,7 +13,7 @@ class GenerationService(
 ) {
     fun getGenerationWeeksInfoDate(user: User): List<String> {
         return generationWeeksInfoRepository.findAllByGeneration(user.nowGeneration)
-            .map { "${it.generation}th ${it.week}week start at : ${it.weekStart} and end at : ${it.weekEnd}, attandance : ${it.attendanceDate}" }
+            .map { "${it.generation}th ${it.week}week, date : ${it.date}" }
     }
 
     fun postGenerationWeeksInfo(
