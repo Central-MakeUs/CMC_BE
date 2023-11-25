@@ -7,6 +7,8 @@ import com.example.cmc_be.domain.user.entity.UserPart
 import com.example.cmc_be.domain.user.enums.Part
 import com.example.cmc_be.user.dto.AuthReq
 import com.example.cmc_be.user.dto.AuthRes
+import com.example.cmc_be.user.dto.UserRes
+import java.util.*
 
 @Convertor
 class UserConvertor {
@@ -42,5 +44,31 @@ class UserConvertor {
             code = code,
             ttl = 300L
         )
+    }
+
+    fun convertToUserInfo(user: User, userPart: Optional<UserPart>): UserRes.UserInfoDto {
+        return UserRes.UserInfoDto(
+            nickname =  user.nickname,
+            generation = userPart.get().generation,
+            part = userPart.get().part
+        )
+    }
+
+    fun convertToMyPageUserInfo(user: User, userParts: List<UserPart>): UserRes.MyPageUserInfoDto {
+        return UserRes.MyPageUserInfoDto(
+            name = user.name,
+            nickname = user.nickname,
+            email = user.username,
+            partLists = convertToPartInfo(userParts)
+        )
+    }
+
+    private fun convertToPartInfo(userParts: List<UserPart>): List<UserRes.PartInfoDto> {
+        return userParts.map { userPart ->
+            UserRes.PartInfoDto(
+                generation = userPart.generation,
+                part = userPart.part
+            )
+        }
     }
 }

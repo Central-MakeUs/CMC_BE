@@ -32,7 +32,7 @@ data class User(
     @Enumerated(EnumType.STRING) val signUpApprove: SignUpApprove = SignUpApprove.NOT,
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "userId")
-    private val userPart: List<UserPart> = ArrayList<UserPart>()
+    val userPart: List<UserPart> = ArrayList<UserPart>()
 ) : UserDetails, BaseEntity() {
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
