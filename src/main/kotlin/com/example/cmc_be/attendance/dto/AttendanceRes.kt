@@ -1,6 +1,7 @@
 package com.example.cmc_be.attendance.dto
 
 import com.example.cmc_be.domain.attendance.enums.AttendanceCategory
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -11,10 +12,12 @@ class AttendanceRes {
         val secondHour: AttendanceCategory,
         val isOffline: Boolean,
         val enable: Boolean,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         val date: LocalDate
     )
 
     data class AttendanceCodeDto(
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         val availableDate: LocalDate,
         val startTime: LocalTime,
         val endTime: LocalTime,
