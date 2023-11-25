@@ -22,7 +22,7 @@ class UserController(
 ) {
     @GetMapping("")
     @ApiErrorCodeExample(UserAuthErrorCode::class)
-    @Operation(summary = "01-01 내 정보 조회")
+    @Operation(summary = "01-01 내 정보 조회 홈화면과 마이페이지 용")
     fun getUserInfo(@AuthenticationPrincipal user: User) : CommonResponse<UserRes.UserInfoDto>{
         return CommonResponse.onSuccess(userService.getUserInfo(user))
     }
@@ -33,12 +33,5 @@ class UserController(
     fun deleteUser(@AuthenticationPrincipal user: User) : CommonResponse<String>{
         userService.deleteUser(user)
         return CommonResponse.onSuccess("탈퇴 성공")
-    }
-
-    @GetMapping("/my-page")
-    @Operation(summary = "01-03 마이페이지 조회")
-    @ApiErrorCodeExample(UserAuthErrorCode::class)
-    fun getMyPage(@AuthenticationPrincipal user: User) : CommonResponse<UserRes.MyPageUserInfoDto>{
-        return CommonResponse.onSuccess(userService.getMyPage(user))
     }
 }

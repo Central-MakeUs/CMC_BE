@@ -50,6 +50,8 @@ class UserConvertor {
         return UserRes.UserInfoDto(
             nickname =  user.nickname,
             generation = userPart.get().generation,
+            name = user.name,
+            email = user.username,
             part = userPart.get().part
         )
     }
