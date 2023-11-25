@@ -5,16 +5,24 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Email Template</title>
 </head>
+<style>
+  .gradient-background {
+    background: linear-gradient(180deg, #171546 0%, #7D3AC1 100%);
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+</style>
 <body style="margin: 0; padding: 0; background-color: #171546; color: white; font-family: Arial, sans-serif;">
-<table width="100%" bgcolor="#171546" border="0" cellpadding="0" cellspacing="0" style="max-width: 1160px; margin: auto;">
+<table width="100%" bgcolor="#171546" border="0" cellpadding="0" cellspacing="0" style="max-width: 1160px; margin: auto;" class="gradient-background">
   <tr>
     <td align="center" style="padding: 50px;">
       <img src="https://cmc-image-s3.s3.ap-northeast-2.amazonaws.com/cmc_logo.svg" alt="CMC Logo" width="100">
-      <h1 style="font-size: 40px; font-weight: bold; margin-bottom: 20px; color: #ffffff;">Central Makeus Challenge</h1>
-      <p style="font-size: 32px; margin-bottom: 40px; color: #ffffff;">Central Makeus Challenge 앱 가입을 위한 인증번호입니다.</p>
-      <p style="font-size: 60px; margin-bottom: 20px; color: #ffffff;" th:text="${code}"><!— Dynamic Code —></p>
-      <p style="font-size: 28px; margin-bottom: 40px; color: #ffffff;">이메일 인증 화면에서 아래 인증번호를 입력하고 인증을 완료해주세요.</p>
-      <p style="font-size: 20px; border-top: 1px solid white; padding-top: 10px; color: #ffffff;">Copyright 2023 Central Makeus Challenge All Rights Reserved.</p>
+      <h1 style="font-size: 40px; font-weight: bold; margin-top: 30px; margin-bottom: 40px; color: #ffffff;">Central Makeus Challenge</h1>
+      <p style="font-size: 28px; margin-bottom: 20px; color: #ffffff;">Central Makeus Challenge 앱 가입을 위한 인증번호입니다.</p>
+      <p style="font-size: 20px; margin-bottom: 20px; color: #ffffff;">이메일 인증 화면에서 아래 인증번호를 입력하고 인증을 완료해주세요.</p>
+      <p style="font-size: 56px; margin-bottom: 40px; color: #ffffff;" th:text="${code}">123456</p>
+      <p style="font-size: 16px; border-top: 1px solid white; padding-top: 10px; color: #ffffff;">Copyright 2023 Central Makeus Challenge All Rights Reserved.</p>
     </td>
   </tr>
 </table>
