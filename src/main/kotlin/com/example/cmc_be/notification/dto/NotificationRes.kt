@@ -1,4 +1,4 @@
-package com.example.cmc_be.notice.dto
+package com.example.cmc_be.notification.dto
 
 class NotificationRes {
     data class NotificationDto(
