@@ -2,6 +2,8 @@ package com.example.cmc_be.common.security
 
 import com.example.cmc_be.common.exeption.NotApproveUserException
 import com.example.cmc_be.common.properties.JwtProperties
+import com.example.cmc_be.domain.redis.entity.RefreshToken
+import com.example.cmc_be.domain.redis.repository.RefreshTokenRepository
 import com.example.cmc_be.domain.user.enums.SignUpApprove
 import com.example.cmc_be.domain.user.repository.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
@@ -26,7 +28,8 @@ import java.util.*
 @Service
 class JwtService(
     val userRepository: UserRepository,
-    val jwtProperties: JwtProperties
+    val jwtProperties: JwtProperties,
+    val refreshTokenRepository: RefreshTokenRepository
 ) {
 
     private fun getSecretKey(): Key = Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray(StandardCharsets.UTF_8))
@@ -50,13 +53,17 @@ class JwtService(
     fun createRefreshToken(userId: Long): String {
         val now = Date()
         val encodedKey = getRefreshKey()
-        return Jwts.builder()
+        val refreshToken : String =  Jwts.builder()
             .setHeaderParam("type", "refresh")
             .claim("userId", userId)
             .setIssuedAt(now)
             .setExpiration(Date(System.currentTimeMillis() + jwtProperties.refreshTokenSeconds))
             .signWith(encodedKey)
             .compact()
+
+        refreshTokenRepository.save(RefreshToken(userId.toString(), refreshToken, jwtProperties.refreshTokenSeconds))
+
+        return refreshToken;
     }
 
 
