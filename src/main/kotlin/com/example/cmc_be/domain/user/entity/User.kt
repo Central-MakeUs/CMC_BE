@@ -29,10 +29,7 @@ data class User(
     val nickname: String,
     val role: String = UserRole.ROLE_USER.value,
     val nowGeneration: Int,
-    @Enumerated(EnumType.STRING) val signUpApprove: SignUpApprove = SignUpApprove.NOT,
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "userId")
-    val userPart: List<UserPart> = ArrayList<UserPart>()
+    @Enumerated(EnumType.STRING) val signUpApprove: SignUpApprove = SignUpApprove.NOT
 ) : UserDetails, BaseEntity() {
 
     override fun getAuthorities(): Collection<GrantedAuthority> {

@@ -22,6 +22,7 @@ class UserConvertor {
         )
     }
 
+
     fun setUserPart(user: User, part: Part, generation: Int): UserPart {
         return UserPart(
             user = user,
