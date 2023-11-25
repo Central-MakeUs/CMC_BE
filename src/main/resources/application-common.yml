@@ -2,8 +2,8 @@ jwt:
   header: X-AUTH-TOKEN
   secret: ${JWT_SECRET_KEY}
   refresh: ${JWT_REFRESH_KEY}
-  access-token-seconds: 31536000
-  refresh-token-seconds: 31536000
+  access-token-seconds: 1
+  refresh-token-seconds: 365
 
 spring:
   main:

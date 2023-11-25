@@ -1,10 +1,12 @@
 package com.example.cmc_be.common.security
 
 import com.example.cmc_be.common.exeption.NotApproveUserException
+import com.example.cmc_be.common.exeption.UnauthorizedException
 import com.example.cmc_be.common.properties.JwtProperties
 import com.example.cmc_be.domain.redis.entity.RefreshToken
 import com.example.cmc_be.domain.redis.repository.RefreshTokenRepository
 import com.example.cmc_be.domain.user.enums.SignUpApprove
+import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import com.example.cmc_be.domain.user.repository.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -23,6 +25,8 @@ import org.springframework.web.context.request.RequestContextListener
 import org.springframework.web.context.request.ServletRequestAttributes
 import java.nio.charset.StandardCharsets
 import java.security.Key
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 
 @Service
@@ -37,33 +41,8 @@ class JwtService(
     private fun getRefreshKey(): Key = Keys.hmacShaKeyFor(jwtProperties.refresh.toByteArray(StandardCharsets.UTF_8))
 
 
-    fun createToken(userId: Long): String {
-        val now = Date()
-        val encodedKey = getSecretKey()
-        log.info("Creating token")
-        return Jwts.builder()
-            .setHeaderParam("type", "jwt")
-            .claim("userId", userId)
-            .setIssuedAt(now)
-            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.accessTokenSeconds))
-            .signWith(encodedKey)
-            .compact()
-    }
-
-    fun createRefreshToken(userId: Long): String {
-        val now = Date()
-        val encodedKey = getRefreshKey()
-        val refreshToken : String =  Jwts.builder()
-            .setHeaderParam("type", "refresh")
-            .claim("userId", userId)
-            .setIssuedAt(now)
-            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.refreshTokenSeconds))
-            .signWith(encodedKey)
-            .compact()
-
-        refreshTokenRepository.save(RefreshToken(userId.toString(), refreshToken, jwtProperties.refreshTokenSeconds))
-
-        return refreshToken;
+    fun createToken(userId: Long?): String {
+        return createJwtToken(userId, Duration.ofDays(jwtProperties.accessTokenSeconds), getSecretKey(), "jwt")
     }
 
 
@@ -117,14 +96,42 @@ class JwtService(
         return request.getHeader(jwtProperties.header)
     }
 
-    fun getExpiredTime(token: String): Date {
-        //받은 토큰의 유효 시간을 받아오기
-        return Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).body.expiration
+    fun getUserIdByRefreshToken(refreshToken: String?): Long? {
+        try {
+            val claims = Jwts.parser()
+                .setSigningKey(getRefreshKey())
+                .parseClaimsJws(refreshToken)
+            return claims.body.get("userId", Integer::class.java).toLong()
+        }catch (e: MalformedJwtException) {
+            throw UnauthorizedException(UserAuthErrorCode.INVALID_TOKEN_EXCEPTION)
+        }
     }
 
-    fun getUserIdByRefreshToken(refreshToken: String): Long {
-        val claims = Jwts.parserBuilder().setSigningKey(getRefreshKey()).build().parseClaimsJws(refreshToken)
-        return claims.body.get("userId", Long::class.java)
+
+    fun createRefreshToken(userId: Long): String {
+        val ttl : Duration = Duration.ofDays(jwtProperties.refreshTokenSeconds)
+
+        val refreshToken : String = createJwtToken(
+            userId,
+            Duration.ofDays(jwtProperties.refreshTokenSeconds),
+            getRefreshKey(),
+            "refresh"
+        )
+
+        refreshTokenRepository.save(RefreshToken(userId.toString(), refreshToken, ttl.seconds))
+
+        return refreshToken
+    }
+    fun createJwtToken(userId: Long?, duration: Duration, key: Key, typeHeader: String): String {
+        val issuedAt = Instant.now()
+        val expiration = issuedAt.plus(duration)
+        return Jwts.builder()
+            .setHeaderParam("type", typeHeader)
+            .claim("userId", userId)
+            .setIssuedAt(Date.from(issuedAt))
+            .setExpiration(Date.from(expiration))
+            .signWith(key)
+            .compact()
     }
 
     @Bean
@@ -133,7 +140,7 @@ class JwtService(
     }
 
     companion object {
-
         private val log = LoggerFactory.getLogger(JwtService::class.java)
     }
+
 }
