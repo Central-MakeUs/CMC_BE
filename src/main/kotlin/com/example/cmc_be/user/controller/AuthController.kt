@@ -2,6 +2,7 @@ package com.example.cmc_be.user.controller
 
 import ApiErrorCodeExample
 import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.domain.user.exeption.CheckAuthErrorCode
 import com.example.cmc_be.domain.user.exeption.LoginUserErrorCode
 import com.example.cmc_be.domain.user.exeption.SendEmailErrorCode
 import com.example.cmc_be.user.dto.AuthReq
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -50,7 +52,7 @@ class AuthController(
         이메일 인증 번호 보내기 for 비밀번호 찾기
      */
 
-    @GetMapping("/password/email")
+    @GetMapping("/password")
     @Operation(summary = "00-04 비밀번호 찾기용 이메일 인증번호 전송")
     @ApiErrorCodeExample(SendEmailErrorCode::class)
     fun sendEmail(@RequestParam email : String) : CommonResponse<String>{
@@ -58,10 +60,21 @@ class AuthController(
         return CommonResponse.onSuccess("이메일 전송 성공")
     }
 
+    @PostMapping("/password")
+    @Operation(summary = "00-05 이메일 인증번호 확인")
+    @ApiErrorCodeExample(CheckAuthErrorCode::class)
+    fun checkEmail(@RequestBody checkEmailDto: AuthReq.CheckEmailDto) : CommonResponse<String>{
+        authService.checkEmailAuth(checkEmailDto)
+        return CommonResponse.onSuccess("이메일 인증 성공")
+    }
 
-    /*
-        이메일 인증번호 확인 용
-     */
+    @PatchMapping("/password")
+    @Operation(summary = "00-06 비밀번호 변경")
+    @ApiErrorCodeExample()
+    fun modifyPassword(@Valid @RequestBody modifyPasswordDto : AuthReq.ModifyPasswordDto) : CommonResponse<String>{
+        authService.modifyPassword(modifyPasswordDto)
+        return CommonResponse.onSuccess("비밀번호 변경 성공")
+    }
 
     /*
         비밀번호 찾기

@@ -22,7 +22,7 @@ data class User(
     @Column(name = "username")
     private val username: String,
     @Column(name = "password")
-    private val password: String,
+    private var password: String,
     @Column(name = "name")
     val name: String,
     @Column(name = "nickname")
@@ -39,7 +39,10 @@ data class User(
         return role.split(",").map { SimpleGrantedAuthority(it) }
     }
 
-    override fun getPassword(): String = password
+    override fun getPassword(): String {
+        return password
+    }
+
     override fun getUsername(): String = username
 
     override fun isAccountNonExpired(): Boolean {
@@ -60,5 +63,13 @@ data class User(
 
     fun isActivated(): Boolean {
         return true
+    }
+
+    fun changeUserPassword(user: User, newPassword: String): User {
+        return user.copy(password = newPassword)
+    }
+
+    fun modifyPassword(password: String) {
+        this.password = password
     }
 }
