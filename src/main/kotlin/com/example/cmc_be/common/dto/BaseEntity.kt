@@ -10,16 +10,20 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class BaseEntity {
+abstract class BaseEntity(
     @Column(name = "createdAt", updatable = false)
     @CreatedDate
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime? = null,
 
     @Column(name = "updatedAt")
     @LastModifiedDate
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime? = null,
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault(value = "ACTIVE")
-    val status : Status = Status.ACTIVE
+    var status : Status = Status.ACTIVE
+) {
+    fun updateStatus(status : Status) {
+        this.status = status
+    }
 }
