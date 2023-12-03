@@ -1,5 +1,6 @@
 package com.example.cmc_be.user.service
 
+import com.example.cmc_be.common.dto.Status
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.common.security.JwtService
@@ -70,11 +71,11 @@ class AuthService(
     }
 
     fun checkEmail(email: String) {
-        if(userRepository.existsByUsername(email)) throw BadRequestException(SignUpUserErrorCode.EXISTS_USER_EMAIL);
+        if(userRepository.existsByUsernameAndStatus(email, Status.ACTIVE)) throw BadRequestException(SignUpUserErrorCode.EXISTS_USER_EMAIL);
     }
 
     fun sendEmail(email: String) {
-        if(!userRepository.existsByUsername(email)) throw BadRequestException(UserAuthErrorCode.NOT_EXIST_USER);
+        if(!userRepository.existsByUsernameAndStatus(email, Status.ACTIVE)) throw BadRequestException(UserAuthErrorCode.NOT_EXIST_USER);
         val code : String = RandomNumber.createRandomNumber()
         codeAuthRepository.save(userConvertor.convertToCodeAuth(email, code))
         mailService.sendEmailAsync(email, code)
