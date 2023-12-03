@@ -21,14 +21,14 @@ class NotificationService(
     private val generationWeekRepository: GenerationWeeksInfoRepository,
     private val notificationConvertor: NotificationConvertor
 ) {
-    fun getThisWeekNotification(user: User): NotificationRes.NotificationDto {
+    fun getThisWeekNotification(user: User): List<NotificationRes.NotificationDto> {
         val notification = notificationRepository.findAllByGenerationWeeksInfoGeneration(
-            user.nowGeneration, PageRequest.of(0, 1, Sort.by("createdAt").descending()),
+            user.nowGeneration, PageRequest.of(0, 5, Sort.by("createdAt").descending()),
         )
         return if (notification.isEmpty) {
             throw NotFoundException(NotificationExceptionErrorCode.NOT_FOUND_LATEST_NOTIFICATION)
         } else {
-            notificationConvertor.getNotification(notification.first())
+            notification.take(5).map(notificationConvertor::getNotification)
         }
     }
 
