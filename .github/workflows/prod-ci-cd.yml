@@ -57,11 +57,11 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/cmc-prod-api.jar
+          cp build/libs/*.jar deploy/cmc-dev-api.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions-prod deploy/.ebextensions
           cp -r .platform deploy/.platform
-          cd deploy && zip -r cmc-prod-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
+          cd deploy && zip -r cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
 
       - name: Deploy Consumer to EB
         uses: einaregilsson/beanstalk-deploy@v19
@@ -70,7 +70,7 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
           application_name: CmcApiServerDev
           environment_name: CmcApiServerDev-env
-          version_label: cmc-prod-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
+          version_label: cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
           region: ap-northeast-2
-          deployment_package: deploy/cmc-prod-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
+          deployment_package: deploy/cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
           wait_for_deployment: false
