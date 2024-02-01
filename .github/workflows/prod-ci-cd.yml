@@ -1,0 +1,76 @@
+name: prod CMC API Server BeanStalk CI/CD
+
+on:
+  push:
+    branches: [ prod ]
+  workflow_dispatch: # 수동 실행 옵션 (생략)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # action 스크립트가 작동될 OS
+
+    steps: # 작업 단계
+      - name: Checkout source code # 단계별 이름, 구분자로 소스를 가져옴
+        uses: actions/checkout@v2
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+
+      - name: Set Environment - Common Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-common.yml
+        env:
+          jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
+          jwt.refresh: ${{ secrets.JWT_REFRESH_KEY }}
+          spring.mail.password: ${{ secrets.MAIL_PASSWORD}}
+
+      - name: Set Environment Domain - Domain PROD Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-domain-prod.yml
+        env:
+          spring.datasource.url: ${{ secrets.PROD_DB_URL_HOST }}
+          spring.datasource.username: ${{ secrets.AWS_DB_USER_NAME }}
+          spring.datasource.password: ${{ secrets.AWS_DB_PASSWORD }}
+          spring.data.redis.host: ${{ secrets.PROD_REDIS_HOST }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        shell: bash
+
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDDTHHmm
+          utcOffset: "+09:00"
+
+      - name: Generate deployment package
+        run: |
+          mkdir -p deploy
+          cp build/libs/*.jar deploy/cmc-prod-api.jar
+          cp Procfile deploy/Procfile
+          cp -r .ebextensions-prod deploy/.ebextensions
+          cp -r .platform deploy/.platform
+          cd deploy && zip -r cmc-prod-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
+
+      - name: Deploy Consumer to EB
+        uses: einaregilsson/beanstalk-deploy@v19
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: CmcApiServerDev
+          environment_name: CmcApiServerDev-env
+          version_label: cmc-prod-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
+          region: ap-northeast-2
+          deployment_package: deploy/cmc-prod-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
+          wait_for_deployment: false
