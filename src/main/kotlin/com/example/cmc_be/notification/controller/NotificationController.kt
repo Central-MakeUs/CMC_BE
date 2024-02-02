@@ -21,8 +21,9 @@ class NotificationController(
 ) {
     @GetMapping("/latest")
     @Operation(summary = "02-01 본인 기수 최신 공지 조회")
-    fun getThisWeekNotification(@AuthenticationPrincipal user: User): CommonResponse<NotificationRes.NotificationDto> {
-        return CommonResponse.onSuccess(notificationService.getThisWeekNotification(user))
+    fun getThisWeekNotification(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes.NotificationDto>> {
+        //return CommonResponse.onSuccess(notificationService.getThisWeekNotification(user))
+        return CommonResponse.onSuccess(notificationService.getAllNotification(user.nowGeneration))
     }
 
     @GetMapping("/all")
