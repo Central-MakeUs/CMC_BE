@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.contorller
+package com.example.cmc_be.health.controller
 
 import ApiErrorCodeExample
 import com.example.cmc_be.common.response.CommonResponse

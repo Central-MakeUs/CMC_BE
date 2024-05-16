@@ -4,8 +4,7 @@ import com.example.cmc_be.common.dto.Status
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.common.security.JwtService
-import com.example.cmc_be.common.utils.MailService
-import com.example.cmc_be.common.utils.RandomNumber
+import com.example.cmc_be.common.utils.RandomNumberUtil
 import com.example.cmc_be.domain.redis.entity.CodeAuth
 import com.example.cmc_be.domain.redis.entity.RefreshToken
 import com.example.cmc_be.domain.redis.repository.CodeAuthRepository
@@ -15,6 +14,7 @@ import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.exeption.*
 import com.example.cmc_be.domain.user.repository.UserPartRepository
 import com.example.cmc_be.domain.user.repository.UserRepository
+import com.example.cmc_be.external.MailService
 import com.example.cmc_be.user.convertor.UserConvertor
 import com.example.cmc_be.user.dto.AuthReq
 import com.example.cmc_be.user.dto.AuthRes
@@ -71,22 +71,28 @@ class AuthService(
     }
 
     fun checkEmail(email: String) {
-        if(userRepository.existsByUsernameAndStatus(email, Status.ACTIVE)) throw BadRequestException(SignUpUserErrorCode.EXISTS_USER_EMAIL);
+        if (userRepository.existsByUsernameAndStatus(email, Status.ACTIVE)) throw BadRequestException(
+            SignUpUserErrorCode.EXISTS_USER_EMAIL
+        );
     }
 
     fun sendEmail(email: String) {
-        if(!userRepository.existsByUsernameAndStatus(email, Status.ACTIVE)) throw BadRequestException(UserAuthErrorCode.NOT_EXIST_USER);
-        val code : String = RandomNumber.createRandomNumber()
+        if (!userRepository.existsByUsernameAndStatus(
+                email,
+                Status.ACTIVE
+            )
+        ) throw BadRequestException(UserAuthErrorCode.NOT_EXIST_USER);
+        val code: String = RandomNumberUtil.createNumbers()
         codeAuthRepository.save(userConvertor.convertToCodeAuth(email, code))
         mailService.sendEmailAsync(email, code)
     }
 
     fun checkEmailAuth(checkEmailDto: AuthReq.CheckEmailDto) {
-        val codeAuth : CodeAuth = codeAuthRepository.findById(checkEmailDto.email).orElseThrow {
+        val codeAuth: CodeAuth = codeAuthRepository.findById(checkEmailDto.email).orElseThrow {
             NotFoundException(CheckAuthErrorCode.NOT_EXISTS_AUTH)
         }
 
-        if(codeAuth.code != checkEmailDto.code) throw BadRequestException(CheckAuthErrorCode.NOT_CORRECT_CODE)
+        if (codeAuth.code != checkEmailDto.code) throw BadRequestException(CheckAuthErrorCode.NOT_CORRECT_CODE)
     }
 
     fun modifyPassword(modifyPasswordDto: AuthReq.ModifyPasswordDto) {

@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.utils
+package com.example.cmc_be.external
 
 import com.example.cmc_be.common.constants.CmcStatic.CODE
 import com.example.cmc_be.common.constants.CmcStatic.HTML
@@ -9,6 +9,8 @@ import com.example.cmc_be.common.constants.CmcStatic.UTF
 import com.example.cmc_be.common.exeption.InternalServerException
 import com.example.cmc_be.domain.user.exeption.SendEmailErrorCode
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Component
@@ -16,8 +18,6 @@ import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
 import org.thymeleaf.templatemode.TemplateMode
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 @Component

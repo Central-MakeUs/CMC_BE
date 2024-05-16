@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.contorller
+package com.example.cmc_be.health.controller
 
 import ApiErrorCodeExample
 import com.example.cmc_be.common.exeption.BadRequestException
@@ -9,7 +9,6 @@ import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import io.swagger.v3.oas.annotations.tags.Tag
 import mu.KotlinLogging
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
