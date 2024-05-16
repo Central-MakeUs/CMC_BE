@@ -27,7 +27,7 @@ class QrCodeService(
         generationReq: GenerateCode,
         generationWeeksInfo: GenerationWeeksInfo
     ): String {
-        return generateUniqueRandomCode().also { randomCode ->
+        return generateUniqueRandomCode().let { randomCode ->
             attendanceCodeRepository.save(
                 AttendanceCode(
                     id = randomCode,
@@ -40,6 +40,7 @@ class QrCodeService(
                     lateMinute = generationReq.lateMinute
                 )
             )
+            randomCode
         }
     }
 
@@ -57,10 +58,10 @@ class QrCodeService(
     }
 
     @Scheduled(cron = "0 0 2 * * *")
-    fun deleteAttemdanceCodesOutOfTime() {
+    fun deleteAttendanceCodesOutOfTime() {
         val attendanceCodes = attendanceCodeRepository.findAll()
-        val invalideAttendanceCodes = attendanceCodes.filter { attendanceCode -> attendanceCode.validate() != null }
-        attendanceCodeRepository.deleteAll(invalideAttendanceCodes)
+        val invalidAttendanceCodes = attendanceCodes.filter { attendanceCode -> attendanceCode.validate() != null }
+        attendanceCodeRepository.deleteAll(invalidAttendanceCodes)
     }
 
     fun getAllCodes(): List<AttendanceCode> {
@@ -78,7 +79,6 @@ class QrCodeService(
             lateMinute = codeInfo.lateMinute
         )
     }
-
 
     fun validateCode(user: User, attendanceCode: AttendanceCode) {
         validateGeneration(user, attendanceCode.generation)
