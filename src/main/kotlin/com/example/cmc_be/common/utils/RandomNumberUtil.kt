@@ -1,17 +1,21 @@
 package com.example.cmc_be.common.utils
 
+import org.springframework.stereotype.Service
 import java.util.*
 
-object RandomNumberUtil {
+@Service
+class RandomNumberUtil {
+
+    private val rand = Random()
+
     fun createNumbers(
         length: Int = 6
     ): String {
-        val rand = Random()
-        var numStr: String = ""
+        val numStr = StringBuilder()
         for (i in 1..length) {
             val ran = rand.nextInt(10).toString()
-            numStr += ran
+            numStr.append(ran)
         }
-        return numStr
+        return numStr.toString()
     }
 }

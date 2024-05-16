@@ -1,7 +1,7 @@
 package com.example.cmc_be.attendance.controller
 
-import com.example.cmc_be.attendance.dto.AttendanceReq
-import com.example.cmc_be.attendance.dto.AttendanceRes
+import com.example.cmc_be.attendance.dto.req.AttendanceCodeReq
+import com.example.cmc_be.attendance.dto.res.AttendancesDashboard
 import com.example.cmc_be.attendance.service.AttendanceService
 import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.domain.user.entity.User
@@ -18,7 +18,7 @@ class AttendanceController(
 ) {
     @GetMapping("")
     @Operation(summary = "03-01 출석 현황 조회")
-    fun getAttendanceList(@AuthenticationPrincipal user: User): CommonResponse<AttendanceRes.GetAttendances> {
+    fun getAttendanceList(@AuthenticationPrincipal user: User): CommonResponse<AttendancesDashboard> {
         return CommonResponse.onSuccess(attendanceService.getAttendanceList(user))
     }
 
@@ -26,7 +26,7 @@ class AttendanceController(
     @Operation(summary = "03-02 출석 체크 진행")
     fun setAttendance(
         @AuthenticationPrincipal user: User,
-        @RequestBody attendanceCode: AttendanceReq.AttendanceCode
+        @RequestBody attendanceCode: AttendanceCodeReq
     ): CommonResponse<String> {
         return CommonResponse.onSuccess(attendanceService.setAttendance(user, attendanceCode))
     }

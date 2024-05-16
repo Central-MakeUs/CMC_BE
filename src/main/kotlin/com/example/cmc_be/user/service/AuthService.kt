@@ -30,7 +30,8 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val mailService: MailService,
     private val codeAuthRepository: CodeAuthRepository,
-    private val refreshTokenRepository: RefreshTokenRepository
+    private val refreshTokenRepository: RefreshTokenRepository,
+    private val randomNumberUtil: RandomNumberUtil
 ) {
     @Transactional
     fun signUpUser(signUpUserDto: SignUpUserDto): UserTokenDto {
@@ -87,7 +88,7 @@ class AuthService(
                 Status.ACTIVE
             )
         ) throw BadRequestException(UserAuthErrorCode.NOT_EXIST_USER);
-        val code = RandomNumberUtil.createNumbers()
+        val code = randomNumberUtil.createNumbers(length = 6)
         codeAuthRepository.save(
             CodeAuth(
                 auth = email,

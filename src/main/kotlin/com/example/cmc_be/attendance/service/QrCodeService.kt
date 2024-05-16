@@ -1,30 +1,30 @@
 package com.example.cmc_be.attendance.service
 
-import com.example.cmc_be.attendance.convertor.AttendanceConverter
-import com.example.cmc_be.attendance.dto.AttendanceReq
-import com.example.cmc_be.attendance.dto.AttendanceRes
+import com.example.cmc_be.attendance.dto.req.GenerateCode
+import com.example.cmc_be.attendance.dto.res.AttendanceCodeRes
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
+import com.example.cmc_be.common.utils.RandomNumberUtil
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 import com.example.cmc_be.domain.attendance.repository.AttendanceCodeRepository
+import com.example.cmc_be.domain.attendance.repository.AttendanceRepository
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import kotlin.random.Random
 
 @Service
 class QrCodeService(
     private val attendanceCodeRepository: AttendanceCodeRepository,
-    private val attendanceCodeValidator: AttendanceCodeValidator,
-    private val attendanceCodeConverter: AttendanceConverter
+    private val attendanceRepository: AttendanceRepository,
+    private val randomNumberUtil: RandomNumberUtil
 ) {
 
     fun generateCode(
-        generationReq: AttendanceReq.GenerateCode,
+        generationReq: GenerateCode,
         generationWeeksInfo: GenerationWeeksInfo
     ): String {
         return generateUniqueRandomCode().also { randomCode ->
@@ -46,15 +46,9 @@ class QrCodeService(
     private fun generateUniqueRandomCode(): String {
         var randomCode: String
         do {
-            randomCode = generateRandomCode()
+            randomCode = randomNumberUtil.createNumbers(6)
         } while (attendanceCodeRepository.findByIdOrNull(randomCode) != null)
         return randomCode
-    }
-
-    private fun generateRandomCode(): String {
-        return (1..CODE_LENGTH)
-            .map { CODE_CHARACTERS[RANDOM_INSTANT.nextInt(0, CODE_CHARACTERS.length)] }
-            .joinToString("")
     }
 
     fun getCode(code: String): AttendanceCode {
@@ -63,32 +57,46 @@ class QrCodeService(
     }
 
     @Scheduled(cron = "0 0 2 * * *")
-    fun deleteObjectsOutsideTimeRange() {
+    fun deleteAttemdanceCodesOutOfTime() {
         val attendanceCodes = attendanceCodeRepository.findAll()
         val invalideAttendanceCodes = attendanceCodes.filter { attendanceCode -> attendanceCode.validate() != null }
         attendanceCodeRepository.deleteAll(invalideAttendanceCodes)
     }
 
-    fun getCodeInfo(code: String): AttendanceRes.AttendanceCodeDto =
-        attendanceCodeConverter.getCodeInfo(
-            attendanceCodeRepository.findByIdOrNull(code) ?: throw BadRequestException(
-                AttendanceErrorCode.INVALID_CODE
-            )
-        )
+    fun getAllCodes(): List<AttendanceCode> {
+        return attendanceCodeRepository.findAll()
+    }
 
-    fun validateCode(user: User, attendanceCode: AttendanceCode) {
-        with(attendanceCodeValidator) {
-            validateGeneration(user, attendanceCode.generation)
-            validateAlreadyAttendance(user.id, attendanceCode)
-        }
-        val validateCodeException = attendanceCode.validate()
-        if (validateCodeException != null) throw validateCodeException
+    fun getCodeInfo(code: String): AttendanceCodeRes {
+        val codeInfo = attendanceCodeRepository.findByIdOrNull(code) ?: throw BadRequestException(
+            AttendanceErrorCode.INVALID_CODE
+        )
+        return AttendanceCodeRes(
+            availableDate = codeInfo.generationWeeksInfo.date,
+            startTime = codeInfo.startTime,
+            endTime = codeInfo.endTime,
+            lateMinute = codeInfo.lateMinute
+        )
     }
 
 
-    companion object {
-        private const val CODE_CHARACTERS = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        private const val CODE_LENGTH = 7
-        private val RANDOM_INSTANT = Random.Default
+    fun validateCode(user: User, attendanceCode: AttendanceCode) {
+        validateGeneration(user, attendanceCode.generation)
+        validateAlreadyAttendance(user.id, attendanceCode)
+        attendanceCode.validate()?.let { throw it }
+    }
+
+    private fun validateAlreadyAttendance(userId: Long, attendanceCode: AttendanceCode) {
+        if (attendanceRepository.findAllByUserId(userId)
+                .any { it.generationWeeksInfo.week == attendanceCode.week && it.attendanceHour == attendanceCode.hour }
+        ) {
+            throw BadRequestException(AttendanceErrorCode.ALREADY_ATEENDANCE)
+        }
+    }
+
+    private fun validateGeneration(user: User, generation: Int) {
+        if (user.nowGeneration != generation) {
+            throw BadRequestException(AttendanceErrorCode.CANNOT_ACCESS_ATEENDANCE)
+        }
     }
 }
