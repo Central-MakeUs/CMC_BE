@@ -3,6 +3,7 @@ package com.example.cmc_be.attendance.controller
 import com.example.cmc_be.attendance.dto.req.GenerateCode
 import com.example.cmc_be.attendance.dto.res.AllAttendanceInfos
 import com.example.cmc_be.attendance.dto.res.AttendanceCodeRes
+import com.example.cmc_be.attendance.dto.res.QrSchemata
 import com.example.cmc_be.attendance.service.AttendanceService
 import com.example.cmc_be.attendance.service.QrCodeService
 import com.example.cmc_be.common.dto.response.CommonResponse
@@ -30,7 +31,7 @@ class AdminAttendanceController(
     fun generateCode(
         @AuthenticationPrincipal user: User,
         @RequestBody gernerateCode: GenerateCode
-    ): CommonResponse<String> {
+    ): CommonResponse<QrSchemata> {
         val generationWeeksInfo = generationWeeksInfoRepository.findFirstByGenerationAndWeek(
             generation = gernerateCode.generation, week = gernerateCode.week
         ) ?: throw BadRequestException(AttendanceErrorCode.CANNOT_ACCESS_ATEENDANCE)

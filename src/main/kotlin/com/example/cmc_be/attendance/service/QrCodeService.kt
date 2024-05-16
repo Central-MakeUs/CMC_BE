@@ -2,6 +2,7 @@ package com.example.cmc_be.attendance.service
 
 import com.example.cmc_be.attendance.dto.req.GenerateCode
 import com.example.cmc_be.attendance.dto.res.AttendanceCodeRes
+import com.example.cmc_be.attendance.dto.res.QrSchemata
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
@@ -26,9 +27,9 @@ class QrCodeService(
     fun generateCode(
         generationReq: GenerateCode,
         generationWeeksInfo: GenerationWeeksInfo
-    ): String {
+    ): QrSchemata {
         return generateUniqueRandomCode().let { randomCode ->
-            attendanceCodeRepository.save(
+            val attendanceCode = attendanceCodeRepository.save(
                 AttendanceCode(
                     id = randomCode,
                     generation = generationReq.generation,
@@ -40,7 +41,11 @@ class QrCodeService(
                     lateMinute = generationReq.lateMinute
                 )
             )
-            randomCode
+            QrSchemata(
+                androidSchema = generateAndroidSchmea(randomCode),
+                iosSchema = generateIOSSchmea(randomCode),
+                attendanceCode = attendanceCode
+            )
         }
     }
 
@@ -99,4 +104,13 @@ class QrCodeService(
             throw BadRequestException(AttendanceErrorCode.CANNOT_ACCESS_ATEENDANCE)
         }
     }
+
+    private fun generateIOSSchmea(code: String): String {
+        return "cmcqrcodechecker://path?code=$code"
+    }
+
+    private fun generateAndroidSchmea(code: String): String {
+        return "com.cmc.android://attendance&code=$code"
+    }
+
 }
