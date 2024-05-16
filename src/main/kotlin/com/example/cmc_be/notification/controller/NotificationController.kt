@@ -21,24 +21,23 @@ class NotificationController(
 ) {
     @GetMapping("/latest")
     @Operation(summary = "02-01 본인 기수 최신 공지 조회")
-    fun getThisWeekNotification(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes.NotificationDto>> {
-        return CommonResponse.onSuccess(notificationService.getThisWeekNotification(user))
+    fun getLatestNotifications(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes>> {
+        return CommonResponse.onSuccess(notificationService.getLatestNotifications(user))
     }
 
     @GetMapping("/all")
     @Operation(summary = "02-02 본인 기수 전체 공지 조회")
-    fun getAllNotification(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes.NotificationDto>> {
-        return CommonResponse.onSuccess(notificationService.getAllNotification(user.nowGeneration))
+    fun getAllNotifications(@AuthenticationPrincipal user: User): CommonResponse<List<NotificationRes>> {
+        return CommonResponse.onSuccess(notificationService.getAllNotifications(user.nowGeneration))
     }
 
     @GetMapping
     @Operation(summary = "02-03 본인 기수 공지 페이징 조회")
-    fun getAllNotificationPaging(
+    fun getAllNotificationsPaging(
         @AuthenticationPrincipal user: User,
         @RequestParam("page") page: Int,
         @RequestParam("size") size: Int,
-    ): CommonResponse<PageResponse<NotificationRes.NotificationDto>> {
-        return CommonResponse.onSuccess(notificationService.getNotificationPaging(user, page, size))
+    ): CommonResponse<PageResponse<NotificationRes>> {
+        return CommonResponse.onSuccess(notificationService.getNotificationsPaging(user, page, size))
     }
-
 }
