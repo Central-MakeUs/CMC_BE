@@ -6,6 +6,7 @@ import com.example.cmc_be.config.properties.JwtProperties
 import com.example.cmc_be.domain.redis.entity.RefreshToken
 import com.example.cmc_be.domain.redis.repository.RefreshTokenRepository
 import com.example.cmc_be.domain.user.enums.SignUpApprove
+import com.example.cmc_be.domain.user.exeption.LoginUserErrorCode
 import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import com.example.cmc_be.domain.user.repository.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
@@ -17,6 +18,7 @@ import io.jsonwebtoken.security.SecurityException
 import jakarta.servlet.ServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -50,11 +52,12 @@ class JwtService(
         try {
             val claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token)
             val userId = claims.body.get("userId", Integer::class.java).toLong()
-            val users = userRepository.findById(userId)
-            if (users.get().signUpApprove.equals(SignUpApprove.NOT)) {
-                throw NotApproveUserException("Not approved user.")
+            val users =
+                userRepository.findByIdOrNull(userId) ?: throw UnauthorizedException(UserAuthErrorCode.NOT_EXIST_USER)
+            if (users.signUpApprove == SignUpApprove.NOT) {
+                throw NotApproveUserException(LoginUserErrorCode.NOT_APPROVE_USER)
             }
-            return UsernamePasswordAuthenticationToken(users.get(), "", users.get().authorities)
+            return UsernamePasswordAuthenticationToken(users, "", users.authorities)
         } catch (e: NoSuchElementException) {
             log.info("유저가 존재하지 않습니다.")
             servletRequest.setAttribute("exception", "NoSuchElementException")

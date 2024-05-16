@@ -2,6 +2,7 @@ package com.example.cmc_be.user.service
 
 import com.example.cmc_be.common.dto.Status
 import com.example.cmc_be.common.exeption.BadRequestException
+import com.example.cmc_be.common.exeption.NotApproveUserException
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.config.security.JwtService
 import com.example.cmc_be.domain.redis.entity.CodeAuth
@@ -11,6 +12,7 @@ import com.example.cmc_be.domain.redis.repository.RefreshTokenRepository
 import com.example.cmc_be.domain.user.adaptor.UserAdapter
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.entity.UserPart
+import com.example.cmc_be.domain.user.enums.SignUpApprove
 import com.example.cmc_be.domain.user.exeption.*
 import com.example.cmc_be.domain.user.repository.UserPartRepository
 import com.example.cmc_be.domain.user.repository.UserRepository
@@ -63,7 +65,9 @@ class AuthService(
 
     fun logInUser(loginUserDto: LoginUserDto): UserTokenDto {
         val user = userAdapter.findByUsername(loginUserDto.email)
-
+        if (user.signUpApprove.equals(SignUpApprove.NOT)) {
+            throw NotApproveUserException(LoginUserErrorCode.NOT_APPROVE_USER)
+        }
         if (!passwordEncoder.matches(
                 loginUserDto.password,
                 user.password
