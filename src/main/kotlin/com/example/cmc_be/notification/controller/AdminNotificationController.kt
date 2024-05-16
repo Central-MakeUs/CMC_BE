@@ -1,6 +1,6 @@
 package com.example.cmc_be.notification.controller
 
-import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.common.dto.response.CommonResponse
 import com.example.cmc_be.domain.notification.entity.Notification
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.notification.dto.NotificationReq

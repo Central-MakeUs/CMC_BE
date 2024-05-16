@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.properties
+package com.example.cmc_be.config.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

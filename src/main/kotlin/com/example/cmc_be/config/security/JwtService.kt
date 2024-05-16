@@ -1,8 +1,8 @@
-package com.example.cmc_be.common.security
+package com.example.cmc_be.config.security
 
 import com.example.cmc_be.common.exeption.NotApproveUserException
 import com.example.cmc_be.common.exeption.UnauthorizedException
-import com.example.cmc_be.common.properties.JwtProperties
+import com.example.cmc_be.config.properties.JwtProperties
 import com.example.cmc_be.domain.redis.entity.RefreshToken
 import com.example.cmc_be.domain.redis.repository.RefreshTokenRepository
 import com.example.cmc_be.domain.user.enums.SignUpApprove
@@ -58,7 +58,7 @@ class JwtService(
         } catch (e: NoSuchElementException) {
             log.info("유저가 존재하지 않습니다.")
             servletRequest.setAttribute("exception", "NoSuchElementException")
-        }   catch (e: NotApproveUserException) {
+        } catch (e: NotApproveUserException) {
             // NotApproveUserException을 잡아서 처리
             log.info("Not approved user: ${e.message}")
             servletRequest.setAttribute("exception", "NotApproveUserException")
@@ -102,16 +102,16 @@ class JwtService(
                 .setSigningKey(getRefreshKey())
                 .parseClaimsJws(refreshToken)
             return claims.body.get("userId", Integer::class.java).toLong()
-        }catch (e: MalformedJwtException) {
+        } catch (e: MalformedJwtException) {
             throw UnauthorizedException(UserAuthErrorCode.INVALID_TOKEN_EXCEPTION)
         }
     }
 
 
     fun createRefreshToken(userId: Long): String {
-        val ttl : Duration = Duration.ofDays(jwtProperties.refreshTokenSeconds)
+        val ttl: Duration = Duration.ofDays(jwtProperties.refreshTokenSeconds)
 
-        val refreshToken : String = createJwtToken(
+        val refreshToken: String = createJwtToken(
             userId,
             Duration.ofDays(jwtProperties.refreshTokenSeconds),
             getRefreshKey(),
@@ -122,6 +122,7 @@ class JwtService(
 
         return refreshToken
     }
+
     fun createJwtToken(userId: Long?, duration: Duration, key: Key, typeHeader: String): String {
         val issuedAt = Instant.now()
         val expiration = issuedAt.plus(duration)

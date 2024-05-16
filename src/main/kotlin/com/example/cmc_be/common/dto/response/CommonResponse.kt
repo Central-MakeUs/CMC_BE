@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.response
+package com.example.cmc_be.common.dto.response
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty

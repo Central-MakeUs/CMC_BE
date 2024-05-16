@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.response
+package com.example.cmc_be.common.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.data.domain.Page

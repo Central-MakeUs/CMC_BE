@@ -1,7 +1,7 @@
 package com.example.cmc_be.user.controller
 
 import ApiErrorCodeExample
-import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.common.dto.response.CommonResponse
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import com.example.cmc_be.user.dto.user.UserInfoDto

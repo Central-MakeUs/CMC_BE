@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.security
+package com.example.cmc_be.config.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest

@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.utils
+package com.example.cmc_be.utils
 
 import org.springframework.stereotype.Service
 import java.util.*

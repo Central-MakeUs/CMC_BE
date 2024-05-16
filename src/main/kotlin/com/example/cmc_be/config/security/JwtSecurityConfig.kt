@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.security
+package com.example.cmc_be.config.security
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

@@ -4,7 +4,6 @@ import com.example.cmc_be.attendance.dto.req.GenerateCode
 import com.example.cmc_be.attendance.dto.res.AttendanceCodeRes
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
-import com.example.cmc_be.common.utils.RandomNumberUtil
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.enums.AttendanceHour
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
@@ -12,6 +11,7 @@ import com.example.cmc_be.domain.attendance.repository.AttendanceCodeRepository
 import com.example.cmc_be.domain.attendance.repository.AttendanceRepository
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
+import com.example.cmc_be.utils.RandomNumberUtil
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service

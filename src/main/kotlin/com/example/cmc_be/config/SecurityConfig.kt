@@ -1,9 +1,9 @@
 package com.example.cmc_be.config
 
-import com.example.cmc_be.common.security.JwtAccessDeniedHandler
-import com.example.cmc_be.common.security.JwtAuthenticationEntryPoint
-import com.example.cmc_be.common.security.JwtSecurityConfig
-import com.example.cmc_be.common.security.JwtService
+import com.example.cmc_be.config.security.JwtAccessDeniedHandler
+import com.example.cmc_be.config.security.JwtAuthenticationEntryPoint
+import com.example.cmc_be.config.security.JwtSecurityConfig
+import com.example.cmc_be.config.security.JwtService
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.AccessDeniedHandler
-import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsUtils
 
@@ -37,6 +36,7 @@ class SecurityConfig(
     fun customAuthenticationFailureHandler(): AccessDeniedHandler {
         return JwtAccessDeniedHandler()
     }
+
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer { web ->

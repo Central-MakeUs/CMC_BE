@@ -1,6 +1,6 @@
 package com.example.cmc_be.generation.controller
 
-import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.common.dto.response.CommonResponse
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.generation.dto.PostGenerationInfoReq
 import com.example.cmc_be.generation.service.GenerationService

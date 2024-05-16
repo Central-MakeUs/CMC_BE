@@ -3,7 +3,7 @@ package com.example.cmc_be.attendance.controller
 import com.example.cmc_be.attendance.dto.req.AttendanceCodeReq
 import com.example.cmc_be.attendance.dto.res.AttendancesDashboard
 import com.example.cmc_be.attendance.service.AttendanceService
-import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.common.dto.response.CommonResponse
 import com.example.cmc_be.domain.user.entity.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

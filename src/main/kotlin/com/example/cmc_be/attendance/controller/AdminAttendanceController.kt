@@ -5,8 +5,8 @@ import com.example.cmc_be.attendance.dto.res.AllAttendanceInfos
 import com.example.cmc_be.attendance.dto.res.AttendanceCodeRes
 import com.example.cmc_be.attendance.service.AttendanceService
 import com.example.cmc_be.attendance.service.QrCodeService
+import com.example.cmc_be.common.dto.response.CommonResponse
 import com.example.cmc_be.common.exeption.BadRequestException
-import com.example.cmc_be.common.response.CommonResponse
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
 import com.example.cmc_be.domain.generation.repository.GenerationWeeksInfoRepository

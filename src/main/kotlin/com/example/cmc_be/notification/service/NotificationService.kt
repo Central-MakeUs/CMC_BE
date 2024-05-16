@@ -1,7 +1,7 @@
 package com.example.cmc_be.notification.service
 
+import com.example.cmc_be.common.dto.response.PageResponse
 import com.example.cmc_be.common.exeption.NotFoundException
-import com.example.cmc_be.common.response.PageResponse
 import com.example.cmc_be.domain.generation.repository.GenerationWeeksInfoRepository
 import com.example.cmc_be.domain.notification.entity.Notification
 import com.example.cmc_be.domain.notification.exception.NotificationExceptionErrorCode

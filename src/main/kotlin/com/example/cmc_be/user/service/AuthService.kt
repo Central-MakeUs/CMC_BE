@@ -3,8 +3,7 @@ package com.example.cmc_be.user.service
 import com.example.cmc_be.common.dto.Status
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
-import com.example.cmc_be.common.security.JwtService
-import com.example.cmc_be.common.utils.RandomNumberUtil
+import com.example.cmc_be.config.security.JwtService
 import com.example.cmc_be.domain.redis.entity.CodeAuth
 import com.example.cmc_be.domain.redis.entity.RefreshToken
 import com.example.cmc_be.domain.redis.repository.CodeAuthRepository
@@ -17,6 +16,7 @@ import com.example.cmc_be.domain.user.repository.UserPartRepository
 import com.example.cmc_be.domain.user.repository.UserRepository
 import com.example.cmc_be.external.MailService
 import com.example.cmc_be.user.dto.auth.*
+import com.example.cmc_be.utils.RandomNumberUtil
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service

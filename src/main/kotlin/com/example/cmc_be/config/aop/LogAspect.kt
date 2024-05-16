@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.aop
+package com.example.cmc_be.config.aop
 
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.*
@@ -9,7 +9,7 @@ import java.lang.reflect.Method
 
 @Component
 @Aspect
-class LogAspect{
+class LogAspect {
     @Pointcut("execution(* com.example.cmc_be..*Controller.*(..))")
     fun controller() {
     }
@@ -53,7 +53,7 @@ class LogAspect{
         val methodName = getMethodName(method)
         log.info("logging finish method = {}", methodName)
         log.info("==========================LOG_FINISH==========================")
-        }
+    }
 
     @AfterReturning(value = "controller()", returning = "returnObj")
     fun afterReturnLog(joinPoint: JoinPoint, returnObj: Any?) {
@@ -77,7 +77,6 @@ class LogAspect{
     companion object {
         private val log = LoggerFactory.getLogger(LogAspect::class.java)
     }
-
 
 
 }

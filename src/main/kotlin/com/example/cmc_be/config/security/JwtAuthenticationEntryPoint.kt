@@ -1,4 +1,4 @@
-package com.example.cmc_be.common.security
+package com.example.cmc_be.config.security
 
 import com.example.cmc_be.domain.user.exeption.UserAuthErrorCode
 import jakarta.servlet.http.HttpServletRequest
