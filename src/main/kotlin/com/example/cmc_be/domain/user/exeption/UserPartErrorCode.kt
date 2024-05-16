@@ -6,17 +6,14 @@ import com.example.cmc_be.config.swagger.ErrorReason
 import org.springframework.http.HttpStatus
 import java.util.*
 
-enum class SignUpUserErrorCode(
+enum class UserPartErrorCode(
     val httpStatus: HttpStatus,
     val code: String,
     val message: String
 ) : BaseErrorCode {
 
-    /*
-       인증 관련 에러코드
-    */
-    EXISTS_USER_EMAIL(HttpStatus.BAD_REQUEST, "USER001", "이메일이 중복되었습니다.");
-    
+    NOT_EXISTS_USER_PART(HttpStatus.BAD_REQUEST, "USER_PART_001", "유저파트가 존재하지 않습니다.");
+
     override val errorReason: ErrorReason
         get() = ErrorReason(
             message = message,
