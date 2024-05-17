@@ -1,3 +1,10 @@
 package com.example.cmc_be.common.exeption
 
-class NotApproveUserException(message: String) : RuntimeException(message)
+import com.example.cmc_be.common.exeption.errorcode.BaseErrorCode
+
+class NotApproveUserException(errorCode: BaseErrorCode) : BaseException(
+    errorCode.errorReason.httpStatus,
+    false,
+    errorCode.errorReason.code,
+    errorCode.errorReason.message
+)

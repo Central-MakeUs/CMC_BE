@@ -16,7 +16,7 @@ enum class SignUpUserErrorCode(
        인증 관련 에러코드
     */
     EXISTS_USER_EMAIL(HttpStatus.BAD_REQUEST, "USER001", "이메일이 중복되었습니다.");
-
+    
     override val errorReason: ErrorReason
         get() = ErrorReason(
             message = message,
