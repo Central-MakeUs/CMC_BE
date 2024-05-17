@@ -12,7 +12,8 @@ enum class LoginUserErrorCode(
     val message: String
 ) : BaseErrorCode {
 
-    NOT_CORRECT_PASSWORD(HttpStatus.BAD_REQUEST, "USER003", "비밀번호가 일치하지 않습니다.");
+    NOT_CORRECT_PASSWORD(HttpStatus.BAD_REQUEST, "USER003", "비밀번호가 일치하지 않습니다."),
+    NOT_APPROVE_USER(HttpStatus.BAD_REQUEST, "USER004", "회원가입 승인되지 않은 유저입니다.");
 
     override val errorReason: ErrorReason
         get() = ErrorReason(

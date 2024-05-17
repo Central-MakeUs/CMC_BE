@@ -1,6 +1,7 @@
 package com.example.cmc_be.notification.controller
 
-import com.example.cmc_be.common.response.CommonResponse
+import com.example.cmc_be.common.dto.response.CommonResponse
+import com.example.cmc_be.domain.notification.entity.Notification
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.notification.dto.NotificationReq
 import com.example.cmc_be.notification.dto.NotificationRes
@@ -19,8 +20,8 @@ class AdminNotificationController(
 
     @PostMapping("")
     @Operation(summary = "02-01 공지 업로드")
-    fun postNotification(@RequestBody notificationInfo: NotificationReq.NotificationInfo): CommonResponse<String> {
-        return CommonResponse.onSuccess(notificationService.upsertNotification(notificationInfo))
+    fun postNotification(@RequestBody notificationReq: NotificationReq): CommonResponse<Notification> {
+        return CommonResponse.onSuccess(notificationService.upsertNotification(notificationReq))
     }
 
     @GetMapping("/all/{generation}")
@@ -28,22 +29,22 @@ class AdminNotificationController(
     fun getAllNotification(
         @AuthenticationPrincipal user: User,
         @PathVariable("generation") generation: Int,
-    ): CommonResponse<List<NotificationRes.NotificationDto>> {
-        return CommonResponse.onSuccess(notificationService.getAllNotification(generation))
+    ): CommonResponse<List<NotificationRes>> {
+        return CommonResponse.onSuccess(notificationService.getAllNotifications(generation))
     }
 
 
-    @PostMapping("/all/{notificationId}")
+    @PostMapping("/{notificationId}")
     @Operation(summary = "02-03 공지 편집")
     fun upsertNotification(
         @AuthenticationPrincipal user: User,
         @PathVariable("notificationId") notificationId: Long,
-        @RequestBody notificationInfo: NotificationReq.NotificationInfo
-    ): CommonResponse<String> {
+        @RequestBody notificationReq: NotificationReq
+    ): CommonResponse<Notification> {
         return CommonResponse.onSuccess(
             notificationService.upsertNotification(
                 notificationId = notificationId,
-                notificationInfo = notificationInfo
+                notificationReq = notificationReq
             )
         )
     }
@@ -53,10 +54,7 @@ class AdminNotificationController(
     fun deleteNotification(
         @AuthenticationPrincipal user: User,
         @PathVariable("notificationId") notificationId: Long,
-    ): CommonResponse<String> {
-        return CommonResponse.onSuccess(
-            notificationService.deleteNotification(notificationId = notificationId)
-        )
+    ): CommonResponse<Unit> {
+        return CommonResponse.onSuccess(notificationService.deleteNotification(notificationId = notificationId))
     }
-
 }

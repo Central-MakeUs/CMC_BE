@@ -8,11 +8,10 @@ import org.springframework.data.redis.core.TimeToLive
 
 @Builder
 @RedisHash(value = "code_auth")
-data class CodeAuth (
+data class CodeAuth(
     @Id
     var auth: String,
     var code: String,
     @TimeToLive
     var ttl: Long
-){
-}
+)
