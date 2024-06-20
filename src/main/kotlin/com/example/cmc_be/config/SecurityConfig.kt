@@ -4,7 +4,6 @@ import com.example.cmc_be.config.security.JwtAccessDeniedHandler
 import com.example.cmc_be.config.security.JwtAuthenticationEntryPoint
 import com.example.cmc_be.config.security.JwtSecurityConfig
 import com.example.cmc_be.config.security.JwtService
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -28,7 +27,6 @@ class SecurityConfig(
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        log.info("passwordEncoder Config")
         return BCryptPasswordEncoder()
     }
 
@@ -42,6 +40,11 @@ class SecurityConfig(
         return WebSecurityCustomizer { web ->
             web.ignoring()
                 .requestMatchers(
+                    "/admin-page/**",
+                    "/index.html",
+                    "/static/**",
+                    "/manifest.json",
+                    "/logo.png",
                     "/h2-console/**",
                     "/favicon.ico",
                     "/swagger-ui/**",
@@ -54,7 +57,6 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        log.info("security config!")
         http
             .csrf { obj -> obj.disable() }
             .headers { header ->
@@ -71,6 +73,10 @@ class SecurityConfig(
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(RequestMatcher { request -> CorsUtils.isPreFlightRequest(request) }).permitAll()
+                    .requestMatchers(
+                        "/admin-page/**,", "/index.html", "/static/**", "/manifest.json", "/logo.png",
+                    ).permitAll()
+                    .requestMatchers("/index.html").permitAll()
                     .requestMatchers("/swagger-resources/**").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/favicon.ico/**").permitAll()
@@ -90,11 +96,6 @@ class SecurityConfig(
                     .authenticated()
             }.apply(JwtSecurityConfig(jwtService))
         return http.build()
-    }
-
-    companion object {
-
-        private val log = LoggerFactory.getLogger(SecurityConfig::class.java)
     }
 }
 

@@ -9,4 +9,3 @@ data class UserInfoDto(
     val generation: Int,
     val part: Part
 )
-

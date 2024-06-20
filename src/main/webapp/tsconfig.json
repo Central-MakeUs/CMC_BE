@@ -1,0 +1,33 @@
+// https://www.typescriptlang.org/ko/tsconfig
+// https://typescript-kr.github.io/pages/compiler-options.html
+{
+  "compilerOptions": {
+    "target": "es6", // ECMAScript 대상 버전 지정: ES3, ES5, ES6/ES2015, ES2016, ES2017, ES2018, ES2019, ES2020, ESNext
+    // 주의사항: ESNext 는 최신 ES 제안 기능을 대상으로 합니다.
+    "module": "commonjs", // 모듈 코드 생성 지정: None, CommonJS, AMD, System, UMD, ES6, ES2015 또는 ESNext.
+    // AMD 와 System 만 --outFile 과 함께 사용할 수 있습니다. ES6와 ES2015 값은 ES5 또는 이하를 대상으로 할 때 사용할 수 있습니다.
+
+    "allowJs": false, // JavaScript 파일의 컴파일을 허용합니다.
+    //    "checkJs": true, // .js 파일에 오류를 보고합니다. --allowJs와 함께 사용하세요.
+    "skipLibCheck": true, // 모든 선언 파일(*.d.ts)의 타입 검사를 건너뜁니다.
+    "esModuleInterop": true, // 런타임 바벨 생태계 호환성을 위한 __importStar와 __importDefault 헬퍼를 내보내고 타입 시스템 호환성을 위해 --allowSyntheticDefaultImports 를 활성화합니다.
+    "allowSyntheticDefaultImports": true, // default export 가 없는 모듈에서 default imports 를 허용합니다. 코드 방출에는 영향을 주지 않으며, 타입 검사만 수행합니다.
+
+    "resolveJsonModule": true, // .json 확장자로 import 된 모듈을 포함합니다.
+    "noEmit": true, // js 컴파일된 소스 파일 노출 안하기
+    "jsx": "react", // tsx 파일을 jsx로 어떻게 컴파일할 것인지 'preserve', 'react-native', 'react'
+    "removeComments": true, //컴파일시 주석제거
+    "declaration": true, //컴파일시 .d.ts 파일도 자동으로 함께생성 (현재쓰는 모든 타입이 정의된 파일)
+    "forceConsistentCasingInFileNames": true, // 파일 이름에 일관된 케이싱 적용
+    "allowUnreachableCode": false, // return 으로 도달 할 수 없는 소스를 짯을 경우 error 처리하지 말까요? false
+    "allowUnusedLabels": false, // return 값 선언을 이상하게 했을 경우 error 처리하지 말까요? fasle
+    "strict": true, //strict 관련, noimplicit 어쩌구 관련 모드 전부 켜기
+    "noImplicitAny": true, //any타입 금지 여부
+    "strictFunctionTypes": true, //함수파라미터 타입체크 강하게
+    "strictPropertyInitialization": true, //class constructor 작성시 타입체크 강하게
+    "alwaysStrict": true, //자바스크립트 "use strict" 모드 켜기
+    "useUnknownInCatchVariables": false,
+    "baseUrl": "src" // 절대경로를 사용하기 위해 baseUrl을 src로 설정
+  },
+  "include": ["src", "svg.d.ts"]
+}

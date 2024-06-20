@@ -1,8 +1,10 @@
+import com.moowork.gradle.node.npm.NpmTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "3.1.4"
     id("io.spring.dependency-management") version "1.1.3"
+    id("com.github.node-gradle.node") version "2.2.2"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
@@ -35,7 +37,7 @@ dependencies {
 
     implementation("mysql:mysql-connector-java:8.0.28")
 
-    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -48,25 +50,52 @@ dependencies {
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.2")
     implementation("org.json:json:20090211")
 
-
     //redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     implementation("io.github.microutils:kotlin-logging:3.0.5")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 
-    implementation ("org.springframework.boot:spring-boot-starter-mail")
-
-    implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation ("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 }
 
 tasks.withType<KotlinCompile> {
+    dependsOn("copyWebApp")
     kotlinOptions {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
+}
+
+node {
+    download = true
+    version = "20.14.0"
+    npmVersion = "10.7.0"
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+}
+
+tasks.register<Copy>("copyWebApp") {
+    dependsOn("appNpmBuild")
+    description = "Copies built project"
+    from("src/main/webapp/build")
+    into("build/resources/main/static/.")
+}
+
+tasks.register<NpmTask>("appNpmBuild") {
+    dependsOn("appNpmInstall")
+    description = "Builds project"
+    workingDir = file("${project.projectDir}/src/main/webapp")
+    args = listOf("run", "build-dev")
+}
+
+tasks.register<NpmTask>("appNpmInstall") {
+    description = "Installs all dependencies from package.json"
+    workingDir = file("${project.projectDir}/src/main/webapp")
+    args = listOf("install")
 }
 
 tasks.withType<Test> {
