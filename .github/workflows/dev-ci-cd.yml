@@ -11,11 +11,11 @@ jobs:
       - name: Checkout source code # 단계별 이름, 구분자로 소스를 가져옴
         uses: actions/checkout@v2
 
-      - name: Setup JDK 17
+      - name: Setup JDK 17 (Amazon Corretto)
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: 'corretto'
 
       - name: Set Environment - Common Yml
         uses: microsoft/variable-substitution@v1
