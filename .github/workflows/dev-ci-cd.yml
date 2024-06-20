@@ -26,10 +26,10 @@ jobs:
           jwt.refresh: ${{ secrets.JWT_REFRESH_KEY }}
           spring.mail.password: ${{ secrets.MAIL_PASSWORD}}
 
-      - name: Set Environment Domain - Domain DEV Yml
+      - name: Set Environment Domain - Domain PROD Yml
         uses: microsoft/variable-substitution@v1
         with:
-          files: src/main/resources/application-domain-dev.yml
+          files: src/main/resources/application-domain-prod.yml
         env:
           spring.datasource.url: ${{ secrets.PROD_DB_URL_HOST }}
           spring.datasource.username: ${{ secrets.AWS_DB_USER_NAME }}
@@ -56,7 +56,7 @@ jobs:
           mkdir -p deploy
           cp build/libs/*.jar deploy/cmc-dev-api.jar
           cp Procfile deploy/Procfile
-          cp -r .ebextensions-dev deploy/.ebextensions
+          cp -r .ebextensions-prod deploy/.ebextensions
           cp -r .platform deploy/.platform
           cd deploy && zip -r cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
 
