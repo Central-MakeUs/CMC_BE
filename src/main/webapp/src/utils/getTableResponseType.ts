@@ -1,7 +1,7 @@
 export interface GetTableResponseTypeParams<T> {
-  src?: T;
-  size?: number;
-  page: number;
+    src?: T;
+    totalCnt?: number;
+    page: number;
 }
 
 /**
@@ -19,10 +19,10 @@ export interface GetTableResponseTypeParams<T> {
  * @param {GetTableResponseTypeParams<T>} 데이터, 한페이지 개수(size), 현재 페이지 인덱스(page)를 인자로 전달합니다.
  * @returns {contents : T, totalCnt : number, page : number}
  */
-export const getTableResponseType = <T extends object[]>({src, size = 10, page}: GetTableResponseTypeParams<T>) => {
-  if (!src) {
-    return {contents: [] as T[], totalCnt: 0, page: 0};
-  }
-  const contents = src.slice(size * page, size * page + size);
-  return {contents: contents as T, totalCnt: src.length, page};
+export const getTableResponseType = <T extends object[]>({src, totalCnt = 10, page}: GetTableResponseTypeParams<T>) => {
+    if (!src) {
+        return {contents: [] as T[], totalCnt: 0, page: 0};
+    }
+    // const contents = src.slice(size * page, size * page + size);
+    return {contents: src as T, totalCnt: totalCnt, page};
 };

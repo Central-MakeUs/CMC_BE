@@ -15,127 +15,125 @@ import ModalButton from "../../components/ModalButton";
 import Row from "../../components/Row";
 
 const USER_COLUMNS: Column[] = [
-  {label: 'id', key: 'id'},
-  {label: '기수', key: 'generation'},
-  {label: '이름', key: 'name'},
-  {label: '이메일', key: 'email'},
-  {label: '닉네임', key: 'nickname'},
-  {label: '파트', key: 'part'},
-  {label: '회원가입 승인', key: 'signUpApprove'},
-  {label: '회원가입 승인', key: 'modal'},
+    {label: 'id', key: 'id'},
+    {label: '기수', key: 'generation'},
+    {label: '이름', key: 'name'},
+    {label: '이메일', key: 'email'},
+    {label: '닉네임', key: 'nickname'},
+    {label: '파트', key: 'part'},
+    {label: '회원가입 승인', key: 'signUpApprove'},
+    {label: '회원가입 승인', key: 'modal'},
 ];
 
 const UserList = () => {
 
-  const {get} = useQueryString();
-  const [page, setPage] = useState(Number(get('page') || 0));
-  const [size, SizeSelect] = useSelectSize(() => setPage(0));
-  const [generation, onChangeGeneration, setGeneration] = useInput(get('searchValue') || '15');
+    const {get} = useQueryString();
+    const [page, setPage] = useState(Number(get('page') || 0));
+    const [size, SizeSelect] = useSelectSize(() => setPage(0));
+    const [generation, onChangeGeneration, setGeneration] = useInput(get('searchValue') || '15');
 
-  /**
-   *
-   * useQuery의 querykey에 다양한 변수들을 넣어줄 수 있습니다.
-   * const {data, status: httpStatus} = useQuery(['mock',page,size, status //..외 기타 키들], () =>
-   */
-  const {
-    data,
-    status: httpStatus,
-    refetch,
-  } = useQuery(
-    [page, size],
-    () =>
-      userApi.getAllUsersByGeneration(
+    /**
+     *
+     * useQuery의 querykey에 다양한 변수들을 넣어줄 수 있습니다.
+     * const {data, status: httpStatus} = useQuery(['mock',page,size, status //..외 기타 키들], () =>
+     */
+    const {
+        data,
+        status: httpStatus,
+        refetch,
+    } = useQuery(
+        [page, size],
+        () =>
+            userApi.getAllUsersByGeneration(
+                {
+                    generation: parseInt(generation),
+                    page: page,
+                    size: size
+                }
+            ),
         {
-          generation: parseInt(generation),
-          page: page,
-          size: size
-        }
-      ),
-    {
-      onSuccess: data => {
-        console.log(data)
-      },
-    },
-  );
+            onSuccess: data => {
+                console.log(data)
+            },
+        },
+    );
 
-  console.log(`data : ${data?.totalCnt}`)
+    useQueryStringEffect(
+        {
+            page,
+            size,
+        },
+        [page, size],
+    );
 
-  useQueryStringEffect(
-    {
-      page,
-      size,
-    },
-    [page, size],
-  );
-
-  return (
-    <>
-      <Section
-        body={
-          <>
-            <Row.Custom label={'기수'}>
-              <CFormInput
-                placeholder='기수를 입력해주세요.'
-                value={generation}
-                type={'number'}
-                onChange={onChangeGeneration}
-              />
-            </Row.Custom>
-          </>
-        }
-        footer={
-          <FlexBox gap={10}>
-            <CButton onClick={() => refetch()}>검색</CButton>
-          </FlexBox>
-        }
-      />
-      <Section
-        body={
-          <Fragment>
-            <Table
-              column={USER_COLUMNS}
-              paginationState={[page, setPage]}
-              size={size}
-              data={getTableResponseType({src: data?.contents, size, page})}
-              renderColumnData={{
-                modal: data => (
-                  <>
-                    <ModalButton
-                      title='회원가입 승인'
-                      description={`이름(${data.name})의 회원가입을 승인할까요?`}
-                      onConfirm={() => {
-                        userApi.handleSignUpAprrove({
-                          userId: data.id,
-                          approve: true
-                        }).then(() => {
-                          refetch();
-                        });
-                      }}
-                    >
-                      승인
-                    </ModalButton>
-                    <ModalButton
-                      title='회원가입 거부'
-                      description={`이름(${data.name})의 회원가입 승인을 거부할까요?`}
-                      onConfirm={() => {
-                        userApi.handleSignUpAprrove({
-                          userId: data.id,
-                          approve: false
-                        }).then(() => {
-                          refetch().then();
-                        });
-                      }}>
-                      거부
-                    </ModalButton>
-                  </>
-                ),
-              }}
+    return (
+        <>
+            <Section
+                body={
+                    <>
+                        <Row.Custom label={'기수'}>
+                            <CFormInput
+                                placeholder='기수를 입력해주세요.'
+                                value={generation}
+                                type={'number'}
+                                onChange={onChangeGeneration}
+                            />
+                        </Row.Custom>
+                    </>
+                }
+                footer={
+                    <FlexBox gap={10}>
+                        <CButton onClick={() => refetch()}>검색</CButton>
+                    </FlexBox>
+                }
             />
-          </Fragment>
-        }
-      />
-    </>
-  );
+            <Section
+                body={
+                    <Fragment>
+                        <Table
+                            column={USER_COLUMNS}
+                            paginationState={[page, setPage]}
+                            size={size}
+                            data={getTableResponseType({src: data?.contents, totalCnt: data?.totalCnt, page})}
+                            renderColumnData={{
+                                modal: data => (
+                                    <>
+                                        <ModalButton
+                                            title='회원가입 승인'
+                                            description={`이름(${data.name})의 회원가입을 승인할까요?`}
+                                            onConfirm={() => {
+                                                userApi.handleSignUpAprrove({
+                                                    userId: data.id,
+                                                    approve: true
+                                                }).then(() => {
+                                                    refetch();
+                                                });
+                                            }}
+                                        >
+                                            승인
+                                        </ModalButton>
+                                        <ModalButton
+                                            title='회원가입 거부'
+                                            description={`이름(${data.name})의 회원가입 승인을 거부할까요?`}
+                                            onConfirm={() => {
+                                                userApi.handleSignUpAprrove({
+                                                    userId: data.id,
+                                                    approve: false
+                                                }).then(() => {
+                                                    refetch().then();
+                                                });
+                                            }}>
+                                            거부
+                                        </ModalButton>
+                                    </>
+                                ),
+                            }}
+                        />
+                    </Fragment>
+                }
+            />
+        </>
+    );
 };
 
 export default UserList;

@@ -28,7 +28,7 @@ class UserAdminController(
         @RequestParam size: Int,
     ): CommonResponse<PageResponse<AdminUserInfoDto>> {
         return CommonResponse.onSuccess(
-            userService.getAllUserInfoByGeneration(generation, 0, 200)
+            userService.getAllUserInfoByGeneration(generation, page, size)
         )
     }
 
