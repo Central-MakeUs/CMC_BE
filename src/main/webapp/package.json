@@ -14,8 +14,7 @@
     "build-prod": "dotenv -e .env.production react-scripts build",
     "start-dev": "dotenv -e .env.development react-scripts start",
     "start-prod": "dotenv -e .env.production react-scripts start",
-    "start-local": "dotenv -e .env.development.local react-scripts start",
-    "prepare": "husky install"
+    "start-local": "dotenv -e .env.development.local react-scripts start"
   },
   "dependencies": {
     "@coreui/coreui": "4.2.6",
@@ -66,7 +65,6 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "react-scripts": "5.0.1",

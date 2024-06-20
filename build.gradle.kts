@@ -78,24 +78,21 @@ node {
     npmWorkDir = file("${project.buildDir}/npm")
 }
 
-tasks.register<Copy>("copyWebApp") {
-    dependsOn("appNpmBuild")
-    description = "Copies built project"
-    from("src/main/webapp/build")
-    into("build/resources/main/static/.")
-}
-
 tasks.register<NpmTask>("appNpmBuild") {
     dependsOn("appNpmInstall")
-    description = "Builds project"
     workingDir = file("${project.projectDir}/src/main/webapp")
     args = listOf("run", "build-dev")
 }
 
 tasks.register<NpmTask>("appNpmInstall") {
-    description = "Installs all dependencies from package.json"
     workingDir = file("${project.projectDir}/src/main/webapp")
     args = listOf("install")
+}
+
+tasks.register<Copy>("copyWebApp") {
+    dependsOn("appNpmBuild")
+    from("src/main/webapp/build")
+    into("build/resources/main/static/.")
 }
 
 tasks.withType<Test> {
