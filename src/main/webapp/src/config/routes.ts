@@ -3,15 +3,14 @@ import React from 'react';
 const Dashboard = React.lazy(() => import('../pages/dashboard/Dashboard'));
 
 const DemoList = React.lazy(() => import('../pages/demo/List'));
-const UserAttendance = React.lazy(() => import('../pages/user/List'));
+const UserList = React.lazy(() => import('../pages/user/UserList'));
 const DemoDetail = React.lazy(() => import('../pages/demo/Detail'));
 const TextEditor = React.lazy(() => import('../pages/demo/EditorPage'));
 
 const routes = [
-  // {path: '', element: Dashboard},
-  {path: '/admin-page/dashboard', component: Dashboard},
-
-  {path: '/user/attendance', component: UserAttendance},
+  {path: '/dashboard', component: Dashboard},
+  {path: '/user/attendance', component: UserList},
+  {path: '/user/attendance/qrcode', component: UserList},
   {path: '/demo/list', component: DemoList},
   {path: '/demo/editor', component: TextEditor},
   {path: '/demo/detail/:id', component: DemoDetail},

@@ -42,7 +42,7 @@ root.render(
         <Suspense fallback={loading}>
           <Routes>
             <Route path='/admin-page/login' element={<Login/>}/>
-            <Route path='/admin-page/register' element={<Register/>}/>
+            {/*<Route path='/admin-page/register' element={<Register/>}/>*/}
             <Route path='/admin-page/404' element={<Page404/>}/>
             <Route path='/admin-page/500' element={<Page500/>}/>
             <Route path='/*' element={<DefaultLayout/>}/>

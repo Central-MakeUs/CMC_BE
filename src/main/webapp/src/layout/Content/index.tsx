@@ -23,7 +23,7 @@ const Content = () => {
           {routes.map((route, idx) => {
             return route.component && <Route key={idx} path={route.path} element={<route.component/>}/>;
           })}
-          <Route path='/' element={<Navigate to='/admin-page/dashboard' replace/>}/>
+          <Route path='/admin-page/' element={<Navigate to='/admin-page/dashboard' replace/>}/>
         </Routes>
       )}
     </Suspense>
