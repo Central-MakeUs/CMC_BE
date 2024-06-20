@@ -1,7 +1,7 @@
 export interface GetTableResponseTypeParams<T> {
-    src?: T;
-    size?: number;
-    page: number;
+  src?: T;
+  size?: number;
+  page: number;
 }
 
 /**
@@ -20,9 +20,9 @@ export interface GetTableResponseTypeParams<T> {
  * @returns {contents : T, totalCnt : number, page : number}
  */
 export const getTableResponseType = <T extends object[]>({src, size = 10, page}: GetTableResponseTypeParams<T>) => {
-    if (!src) {
-        return {contents: [] as T[], totalCnt: 0, page: 0};
-    }
-    const contents = src.slice(size * page, size * page + size);
-    return {contents: contents as T, totalCnt: src.length, page};
+  if (!src) {
+    return {contents: [] as T[], totalCnt: 0, page: 0};
+  }
+  const contents = src.slice(size * page, size * page + size);
+  return {contents: contents as T, totalCnt: src.length, page};
 };

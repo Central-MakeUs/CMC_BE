@@ -58,6 +58,8 @@ const UserList = () => {
     },
   );
 
+  console.log(`data : ${data?.totalCnt}`)
+
   useQueryStringEffect(
     {
       page,

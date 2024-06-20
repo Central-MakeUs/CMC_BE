@@ -14,6 +14,7 @@ const Content = () => {
   const location = useLocation();
   const [isExistsFilteredRoute] = useState(routes.filter(route => route.path === location.pathname).length > 0);
 
+  console.log(`isExistsFilteredRoute : ${isExistsFilteredRoute}`)
   return (
     <Suspense fallback={loading}>
       {!isExistsFilteredRoute ? (

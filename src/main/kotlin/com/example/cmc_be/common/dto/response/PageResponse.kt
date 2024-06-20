@@ -22,7 +22,7 @@ data class PageResponse<T>(
             return PageResponse(
                 page = page.number,
                 isLast = page.isLast,
-                totalCnt = page.count(),
+                totalCnt = page.totalElements.toInt(),
                 contents = page.toList().map { contentMapper(it) }
             )
         }
@@ -31,7 +31,7 @@ data class PageResponse<T>(
             return PageResponse(
                 page = page.number,
                 isLast = page.isLast,
-                totalCnt = page.count(),
+                totalCnt = page.totalElements.toInt(),
                 contents = page.toList()
             )
         }

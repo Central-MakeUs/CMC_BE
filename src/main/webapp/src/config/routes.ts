@@ -9,6 +9,7 @@ const TextEditor = React.lazy(() => import('../pages/demo/EditorPage'));
 
 const routes = [
   {path: '/dashboard', component: Dashboard},
+  {path: '/admin-page/dashboard', component: Dashboard},
   {path: '/user/attendance', component: UserList},
   {path: '/user/attendance/qrcode', component: UserList},
   {path: '/demo/list', component: DemoList},
