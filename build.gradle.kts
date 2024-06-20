@@ -86,7 +86,7 @@ tasks.register<NpmTask>("appNpmBuild") {
 
 tasks.register<NpmTask>("appNpmInstall") {
     workingDir = file("${project.projectDir}/src/main/webapp")
-    args = listOf("install")
+    args = listOf("install --legacy-peer-deps")
 }
 
 tasks.register<Copy>("copyWebApp") {
