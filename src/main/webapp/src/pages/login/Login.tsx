@@ -42,11 +42,15 @@ const Login = () => {
         return;
       }
 
-      const data = await loginApi.postUsersLogin({email: email, password: password, id: email});
-      // saveUser({id: 0, email: 'test@test.com', name: '테스터'});
-      saveJwt(data.accessToken);
-
-      navigate(`/admin-page/dashboard`);
+      await loginApi.postUsersLogin({email: email, password: password, id: email})
+        .then(response => {
+          console.log(response)
+          saveJwt(response.accessToken);
+          openToast(`로그인에 성공했습니다.`)
+          navigate(`/admin-page/dashboard`);
+        }).catch(error => {
+          openToast(`로그인에 실패했습니다.${error}`)
+        })
     } catch (error) {
       openToast(error);
     }

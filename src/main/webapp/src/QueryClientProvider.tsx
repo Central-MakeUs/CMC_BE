@@ -31,7 +31,7 @@ const QueryClientProvider = (props: React.PropsWithChildren<unknown>) => {
           clearJwt();
           clearUser();
           request.defaults.headers.common.Authorization = ``;
-          navigate('/login');
+          navigate('/admin-page/login');
         }
       },
     },

@@ -14,17 +14,15 @@ const DefaultLayout = () => {
     if (!getJwt()) {
       openToast('로그인이 필요합니다.');
       clearJwt();
-      navigate(`/login`);
+      navigate(`/admin-page/login`);
       return;
     }
 
     const fetchData = async () => {
       try {
-        // TODO 서버 API 나오면 주석 해제
         // await loginApi.postUsersAutoLogin(getJwt())
       } catch (error) {
-        // TODO 서버 http response status 에 맞춰서 '자동 로그인이 만료되었습니다.' 메시지로 변경
-        openToast(error);
+        openToast(`${error}가 발생했습니다. 로그인 페이지로 돌아갑니다.`);
         clearUser();
         clearJwt();
         navigate(`/admin-page/login`);

@@ -12,9 +12,9 @@
   "scripts": {
     "build-dev": "CI=false dotenv -e .env.development react-scripts build",
     "build-prod": "CI=false dotenv -e .env.production react-scripts build",
-    "start-dev": "dotenv -e .env.development react-scripts start",
-    "start-prod": "dotenv -e .env.production react-scripts start",
-    "start-local": "dotenv -e .env.development.local react-scripts start"
+    "start-dev": "CI=false dotenv -e .env.development react-scripts start",
+    "start-prod": "CI=false dotenv -e .env.production react-scripts start",
+    "start-local": "CI=false dotenv -e .env.development.local react-scripts start"
   },
   "dependencies": {
     "@coreui/coreui": "4.2.6",
