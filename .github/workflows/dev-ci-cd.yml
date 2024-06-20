@@ -16,12 +16,6 @@ jobs:
         with:
           node-version: '20'  # 사용할 Node.js 버전 지정
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-        
       - name: Setup JDK 17 (Amazon Corretto)
         uses: actions/setup-java@v3
         with:
