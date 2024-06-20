@@ -6,4 +6,3 @@ logs/*
 build-dev/*
 build-stage/*
 build/*
-package-lock.json
