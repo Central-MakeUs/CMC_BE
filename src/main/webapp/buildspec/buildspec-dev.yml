@@ -1,0 +1,28 @@
+version: 0.2
+env:
+  variables:
+    PROJECT: ''
+    ENV: 'dev'
+phases:
+  install:
+    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
+    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
+    runtime-versions:
+      nodejs: 16
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm install
+  build:
+    commands:
+      - echo Build started on 'date'
+      - npm run build-$ENV
+  post_build:
+    commands:
+      - path="/$PROJECT/web/$ENV/"
+      - aws s3 sync ./build/ s3://$(aws ssm get-parameters --region ap-northeast-2 --names $path"bucket-name" --query Parameters[0].Value | sed 's/"//g') --delete
+      - aws cloudfront create-invalidation --distribution-id $(aws ssm get-parameters --region ap-northeast-2 --names $path"cf-id" --query Parameters[0].Value | sed 's/"//g') --paths "/*"
+artifacts:
+  files:
+    - 'build/*'
+    - 'build/**/*'

@@ -1,0 +1,36 @@
+// Here you can add other styles
+
+html {
+  font-size: 14px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  cursor: pointer;
+  border: 1px solid #d8dbe0;
+}
+
+th.small {
+  min-width: 70px;
+  max-width: 70px;
+}
+
+th {
+  min-width: 150px;
+  max-width: 150px;
+  border: 1px solid #d8dbe0;
+}
+
+th.large {
+  min-width: 300px;
+  max-width: 300px;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

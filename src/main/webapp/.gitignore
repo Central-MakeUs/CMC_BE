@@ -1,0 +1,9 @@
+idea/*
+.DS_Store
+node_modules/*
+logs/*
+.vscode/*
+build-dev/*
+build-stage/*
+build/*
+package-lock.json

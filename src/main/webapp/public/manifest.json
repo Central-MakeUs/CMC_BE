@@ -1,0 +1,15 @@
+{
+  "short_name": "너디너리 관리자페이지 템플릿",
+  "name": "너디너리 관리자페이지 템플릿",
+  "icons": [
+    {
+      "src": "./assets/img/favicon.png",
+      "sizes": "100x100",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
