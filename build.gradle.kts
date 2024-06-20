@@ -86,7 +86,7 @@ tasks.register<NpmTask>("appNpmBuild") {
 
 tasks.register<NpmTask>("appNpmInstall") {
     workingDir = file("${project.projectDir}/src/main/webapp")
-    args = listOf("ci")
+    args = listOf("install")
 }
 
 tasks.register<Copy>("copyWebApp") {
