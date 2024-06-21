@@ -4,125 +4,204 @@ import useSelectSize from 'components/Select/useSelectSize';
 import useQueryString from 'hooks/useQueryString';
 import React, {Fragment, useState} from 'react';
 import useQueryStringEffect from "../../hooks/useQueryStringEffect";
-import {useInput} from "../../hooks/useInput";
 import {useQuery} from "@tanstack/react-query";
-import {userApi} from "../../apis/handlers/users";
+import Table from "../../components/Table";
+import {getTableResponseType} from "../../utils/getTableResponseType";
+import {attendanceApi} from "../../apis/handlers/attendance";
+import Row from "../../components/Row";
+import {CButton, CFormInput} from "@coreui/react";
+import useSelect, {Option} from "../../components/Select/useSelect";
+import {FlexBox} from "../../components/FlexBox";
 
-const USER_COLUMNS: Column[] = [
-    {label: 'id', key: 'id'},
-    {label: '기수', key: 'generation'},
-    {label: '이름', key: 'name'},
-    {label: '이메일', key: 'email'},
-    {label: '닉네임', key: 'nickname'},
-    {label: '파트', key: 'part'},
-    {label: '회원가입 승인', key: 'signUpApprove'},
-    {label: '회원가입 승인', key: 'modal'},
+const ATTENDANCE_CODE_COLUMN: Column[] = [
+  {label: 'id', key: 'id'},
+  {label: '기수', key: 'generation'},
+  {label: '주차', key: 'week'},
+  {label: '1차 출석(FIRST), 2차 출석(SECOND)', key: 'hour'},
+  {label: '출석 시작 시간', key: 'startTime'},
+  {label: '출석 종료 시간', key: 'endTime'},
+  {label: '지각 허용 시간(분)', key: 'lateMinute'},
+];
+
+const ATTEMDAMCE_HOUR_OPTIONS: Option[] = [
+  {label: '1차', value: '1'},
+  {label: '2차', value: '2'},
 ];
 
 const QRCodeList = () => {
 
-    const {get} = useQueryString();
-    const [page, setPage] = useState(Number(get('page') || 0));
-    const [size, SizeSelect] = useSelectSize(() => setPage(0));
-    const [generation, onChangeGeneration, setGeneration] = useInput(get('searchValue') || '15');
+  const {get, initDate, initSelect} = useQueryString();
+  const [page, setPage] = useState(Number(get('page') || 0));
+  const [size, SizeSelect] = useSelectSize(() => setPage(0));
+  const [generation, onChangeGenerationValue] = useState<string>('');
+  const [attendanceHour, AttendanceHourStatusSelect, setAttendanceHourStatusSelect] = useSelect(ATTEMDAMCE_HOUR_OPTIONS, initSelect('1', ATTEMDAMCE_HOUR_OPTIONS));
+  const [week, onChangeWeekValue] = useState<string>('');
+  const [startHour, onChangeStartHourValue] = useState<string>('');
+  const [startMinute, onChangeStartMinuteValue] = useState<string>('');
+  const [endHour, onChangeEndHourValue] = useState<string>('');
+  const [endMinute, onChangeEndMinuteValue] = useState<string>('');
+  const [lateMinute, onChangeLateMinuteValue] = useState<string>('');
 
-    /**
-     *
-     * useQuery의 querykey에 다양한 변수들을 넣어줄 수 있습니다.
-     * const {data, status: httpStatus} = useQuery(['mock',page,size, status //..외 기타 키들], () =>
-     */
-    const {
-        data,
-        status: httpStatus,
-        refetch,
-    } = useQuery(
-        [page, size],
-        () =>
-            userApi.getAllUsersByGeneration(
-                {
-                    generation: parseInt(generation),
-                    page: page,
-                    size: size
-                }
-            ),
+  const {
+    data,
+    status: httpStatus,
+    refetch,
+  } = useQuery(
+    [page, size],
+    () =>
+      attendanceApi.getAllAttendanceCode(
         {
-            onSuccess: data => {
-                console.log(data)
-            },
-        },
-    );
+          page: page,
+          size: size
+        }
+      ),
+    {
+      onSuccess: data => {
+        console.log(data)
+      },
+    },
+  );
 
-    useQueryStringEffect(
-        {
-            page,
-            size,
-        },
-        [page, size],
-    );
+  useQueryStringEffect(
+    {
+      page,
+      size,
+    },
+    [page, size],
+  );
 
-    return (
-        <>
-            <Section
-                body={
-                    <>
-                        QR 코드 준비 중...
-                    </>
-                }
-                footer={
-                    <>
-                    </>
-                    // <FlexBox gap={10}>
-                    //     <CButton onClick={() => refetch()}>검색</CButton>
-                    // </FlexBox>
-                }
+  const generateAttendanceCode = () => {
+    attendanceApi.postAttendanceCode({
+      generation: generation,
+      week: week,
+      hour: attendanceHour!!.toString(),
+      startTime: {
+        hour: startHour,
+        minute: endMinute
+      },
+      endTime: {
+        hour: endHour,
+        minute: endMinute
+      },
+      lateMinute: lateMinute
+    }).then((r) => {
+      console.log(r)
+      refetch()
+    })
+  }
+
+  return (
+    <>
+      <Section
+        body={
+          <>
+            <Row.Custom label={'QR 코드 조회 및 생성'}/>
+            <Row.Custom label={'생성'}>
+              <Row.Custom label={'기수'}>
+                <CFormInput
+                  placeholder='(14, 15)'
+                  value={generation}
+                  onChange={(event) => {
+                    onChangeGenerationValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+              <Row.Custom label={'주차'}>
+                <CFormInput
+                  placeholder='(1, 2)'
+                  value={week}
+                  onChange={(event) => {
+                    onChangeWeekValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+
+              <Row.Custom label={'출석 시작 시(24시간제)'}>
+                <CFormInput
+                  placeholder='(13, 14)'
+                  value={startHour}
+                  onChange={(event) => {
+                    onChangeStartHourValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+
+              <Row.Custom label={'출석 시작 분'}>
+                <CFormInput
+                  placeholder='(10, 30)'
+                  value={startMinute}
+                  onChange={(event) => {
+                    onChangeStartMinuteValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+
+              <Row.Custom label={'출석 종료 시(24시간제)'}>
+                <CFormInput
+                  placeholder='(13, 14)'
+                  value={endHour}
+                  onChange={(event) => {
+                    onChangeEndHourValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+
+              <Row.Custom label={'출석 종료 분'}>
+                <CFormInput
+                  placeholder='(10, 30)'
+                  value={endMinute}
+                  onChange={(event) => {
+                    onChangeEndMinuteValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+
+              <Row.Custom label={'지각 허용 시간(분)'}>
+                <CFormInput
+                  placeholder='(15)'
+                  value={lateMinute}
+                  onChange={(event) => {
+                    onChangeLateMinuteValue(event.target.value)
+                  }}
+                />
+              </Row.Custom>
+            </Row.Custom>
+
+            <Row.Custom label={'1차, 2차 출석'}>
+              <AttendanceHourStatusSelect width={130}/>
+            </Row.Custom>
+          </>
+        }
+        footer={
+          <>
+            <FlexBox gap={15}>
+              <CButton onClick={() => {
+                generateAttendanceCode()
+              }}>QR 생성</CButton>
+            </FlexBox>
+          </>
+        }
+      />
+      <Section
+        body={
+          <Fragment>
+            <Table
+              column={ATTENDANCE_CODE_COLUMN}
+              paginationState={[page, setPage]}
+              size={size}
+              data={getTableResponseType({src: data?.contents, totalCnt: data?.totalCnt, page})}
+              renderColumnData={{
+                modal: data => (
+                  <>
+                  </>
+                ),
+              }}
             />
-            {/*<Section*/}
-            {/*    body={*/}
-            {/*        <Fragment>*/}
-            {/*            <Table*/}
-            {/*                column={USER_COLUMNS}*/}
-            {/*                paginationState={[page, setPage]}*/}
-            {/*                size={size}*/}
-            {/*                data={getTableResponseType({src: data?.contents, totalCnt: data?.totalCnt, page})}*/}
-            {/*                renderColumnData={{*/}
-            {/*                    modal: data => (*/}
-            {/*                        <>*/}
-            {/*                            <ModalButton*/}
-            {/*                                title='회원가입 승인'*/}
-            {/*                                description={`이름(${data.name})의 회원가입을 승인할까요?`}*/}
-            {/*                                onConfirm={() => {*/}
-            {/*                                    userApi.handleSignUpAprrove({*/}
-            {/*                                        userId: data.id,*/}
-            {/*                                        approve: true*/}
-            {/*                                    }).then(() => {*/}
-            {/*                                        refetch();*/}
-            {/*                                    });*/}
-            {/*                                }}*/}
-            {/*                            >*/}
-            {/*                                승인*/}
-            {/*                            </ModalButton>*/}
-            {/*                            <ModalButton*/}
-            {/*                                title='회원가입 거부'*/}
-            {/*                                description={`이름(${data.name})의 회원가입 승인을 거부할까요?`}*/}
-            {/*                                onConfirm={() => {*/}
-            {/*                                    userApi.handleSignUpAprrove({*/}
-            {/*                                        userId: data.id,*/}
-            {/*                                        approve: false*/}
-            {/*                                    }).then(() => {*/}
-            {/*                                        refetch().then();*/}
-            {/*                                    });*/}
-            {/*                                }}>*/}
-            {/*                                거부*/}
-            {/*                            </ModalButton>*/}
-            {/*                        </>*/}
-            {/*                    ),*/}
-            {/*                }}*/}
-            {/*            />*/}
-            {/*        </Fragment>*/}
-            {/*    }*/}
-            {/*/>*/}
-        </>
-    );
+          </Fragment>
+        }
+      />
+    </>
+  );
 };
 
 export default QRCodeList;

@@ -3,6 +3,7 @@ package com.example.cmc_be.attendance.service
 import com.example.cmc_be.attendance.dto.req.GenerateCode
 import com.example.cmc_be.attendance.dto.res.AttendanceCodeRes
 import com.example.cmc_be.attendance.dto.res.QrSchemata
+import com.example.cmc_be.common.dto.response.PageResponse
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
@@ -13,6 +14,8 @@ import com.example.cmc_be.domain.attendance.repository.AttendanceRepository
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.utils.RandomNumberUtil
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -71,6 +74,11 @@ class QrCodeService(
 
     fun getAllCodes(): List<AttendanceCode> {
         return attendanceCodeRepository.findAll()
+    }
+
+    fun getAllCodePage(page: Int, size: Int): PageResponse<AttendanceCode> {
+        val pageable = PageRequest.of(page, size, Sort.by("id").descending())
+        return PageResponse.from(attendanceCodeRepository.findAll(pageable))
     }
 
     fun getCodeInfo(code: String): AttendanceCodeRes {

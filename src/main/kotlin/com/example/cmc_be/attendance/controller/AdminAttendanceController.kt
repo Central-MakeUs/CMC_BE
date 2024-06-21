@@ -7,6 +7,7 @@ import com.example.cmc_be.attendance.dto.res.QrSchemata
 import com.example.cmc_be.attendance.service.AttendanceService
 import com.example.cmc_be.attendance.service.QrCodeService
 import com.example.cmc_be.common.dto.response.CommonResponse
+import com.example.cmc_be.common.dto.response.PageResponse
 import com.example.cmc_be.common.exeption.BadRequestException
 import com.example.cmc_be.domain.attendance.entity.AttendanceCode
 import com.example.cmc_be.domain.attendance.exception.AttendanceErrorCode
@@ -60,6 +61,16 @@ class AdminAttendanceController(
         @AuthenticationPrincipal user: User,
     ): CommonResponse<List<AttendanceCode>> {
         return CommonResponse.onSuccess(qrCodeService.getAllCodes())
+    }
+
+    @GetMapping("/code/page")
+    @Operation(summary = "03-03 모든 코드 정보 조회")
+    fun getCodeInfoPage(
+        @AuthenticationPrincipal user: User,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int,
+    ): CommonResponse<PageResponse<AttendanceCode>> {
+        return CommonResponse.onSuccess(qrCodeService.getAllCodePage(page, size))
     }
 
     @GetMapping("/all")

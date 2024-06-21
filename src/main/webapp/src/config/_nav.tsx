@@ -1,5 +1,5 @@
 import React, {ElementType, ReactNode} from 'react';
-import {cilAddressBook, cilHome} from '@coreui/icons';
+import {cilAddressBook, cilHome, cilStar} from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import {CNavGroup, CNavItem} from '@coreui/react';
 
@@ -44,28 +44,28 @@ const _nav = [
     ],
   },
 
-  // {
-  //   component: CNavGroup,
-  //   name: '예제 그룹',
-  //   icon: <CIcon icon={cilStar} customClassName='nav-icon'/>,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: '{도메인} 목록 조회',
-  //       to: '//demo/list',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: '{도메인} 상세 화면',
-  //       to: '//demo/detail/1',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: '텍스트 에디터',
-  //       to: '//demo/editor',
-  //     },
-  //   ],
-  // },
+  {
+    component: CNavGroup,
+    name: '예제 그룹',
+    icon: <CIcon icon={cilStar} customClassName='nav-icon'/>,
+    items: [
+      {
+        component: CNavItem,
+        name: '{도메인} 목록 조회',
+        to: '/admin-page/demo/list',
+      },
+      {
+        component: CNavItem,
+        name: '{도메인} 상세 화면',
+        to: '/admin-page/demo/detail/1',
+      },
+      {
+        component: CNavItem,
+        name: '텍스트 에디터',
+        to: '/admin-page/demo/editor',
+      },
+    ],
+  },
 ];
 
 export default _nav;
