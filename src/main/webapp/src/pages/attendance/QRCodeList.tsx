@@ -74,10 +74,10 @@ const QRCodeList = () => {
     attendanceApi.postAttendanceCode({
       generation: generation,
       week: week,
-      hour: attendanceHour!!.toString(),
+      hour: attendanceHour?.toString() ?? "1",
       startTime: {
         hour: startHour,
-        minute: endMinute
+        minute: startMinute
       },
       endTime: {
         hour: endHour,
