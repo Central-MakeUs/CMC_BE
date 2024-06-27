@@ -24,6 +24,6 @@ class GenerationService(
 
     fun getGenerationWeeksInfoDate(generation: Int, page: Int, size: Int): PageResponse<GenerationWeeksInfo> {
         val pageable = PageRequest.of(page, size, Sort.by("id").descending())
-        return PageResponse.from(generationWeeksInfoRepository.findAll(pageable))
+        return PageResponse.from(generationWeeksInfoRepository.findAllByGeneration(generation, pageable))
     }
 }

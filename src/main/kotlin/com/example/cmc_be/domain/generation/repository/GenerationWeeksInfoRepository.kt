@@ -1,11 +1,14 @@
 package com.example.cmc_be.domain.generation.repository
 
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface GenerationWeeksInfoRepository : JpaRepository<GenerationWeeksInfo, Long> {
 
     fun findAllByGeneration(generation: Int): List<GenerationWeeksInfo>
+    fun findAllByGeneration(generation: Int, pageable: Pageable): Page<GenerationWeeksInfo>
 
     fun findByGenerationAndWeek(generation: Int, week: Int): GenerationWeeksInfo?
 

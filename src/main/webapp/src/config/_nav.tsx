@@ -1,5 +1,5 @@
 import React, {ElementType, ReactNode} from 'react';
-import {cilAddressBook, cilHome, cilStar} from '@coreui/icons';
+import {cilAddressBook, cilCalendar, cilHome, cilStar} from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import {CNavGroup, CNavItem} from '@coreui/react';
 
@@ -28,12 +28,24 @@ const _nav = [
   },
   {
     component: CNavGroup,
+    name: '동아리 기수 관리',
+    icon: <CIcon icon={cilCalendar} customClassName='nav-icon'/>,
+    items: [
+      {
+        component: CNavItem,
+        name: '기수 조회',
+        to: '/generation-week',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
     name: '동아리 인원 관리',
     icon: <CIcon icon={cilAddressBook} customClassName='nav-icon'/>,
     items: [
       {
         component: CNavItem,
-        name: '유저 조회',
+        name: '동아리원 조회',
         to: '/admin-page/user/attendance',
       },
       {
