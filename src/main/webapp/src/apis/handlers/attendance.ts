@@ -14,4 +14,9 @@ export const attendanceApi = {
     const url = setSearchParams(`/admin/attendances/code`, payload);
     return await request.post<AttendanceCodeDTO>(url, payload);
   },
+
+  deleteAttendanceCode: async (id: any) => {
+    const url = setSearchParams(`/admin/attendances/code`, id);
+    return await request.delete<any>(url, id);
+  },
 };

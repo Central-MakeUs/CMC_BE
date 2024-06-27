@@ -12,6 +12,7 @@ import Row from "../../components/Row";
 import {CButton, CFormInput} from "@coreui/react";
 import useSelect, {Option} from "../../components/Select/useSelect";
 import {FlexBox} from "../../components/FlexBox";
+import ModalButton from "../../components/ModalButton";
 
 const ATTENDANCE_CODE_COLUMN: Column[] = [
   {label: 'id', key: 'id'},
@@ -21,6 +22,7 @@ const ATTENDANCE_CODE_COLUMN: Column[] = [
   {label: '출석 시작 시간', key: 'startTime'},
   {label: '출석 종료 시간', key: 'endTime'},
   {label: '지각 허용 시간(분)', key: 'lateMinute'},
+  {label: 'QR 삭제', key: 'modal'},
 ];
 
 const ATTEMDAMCE_HOUR_OPTIONS: Option[] = [
@@ -59,6 +61,9 @@ const QRCodeList = () => {
       onSuccess: data => {
         console.log(data)
       },
+      onError: err => {
+        console.log(err)
+      }
     },
   );
 
@@ -84,6 +89,18 @@ const QRCodeList = () => {
         minute: endMinute
       },
       lateMinute: lateMinute
+    }).then((r) => {
+      console.log(r)
+      refetch()
+    }).catch(e => {
+      console.log(e)
+      alert(`출석 코드 생성에 실패했습니다. ${e.message}`)
+    })
+  }
+
+  const deleteAttendanceCode = (id: number) => {
+    attendanceApi.deleteAttendanceCode({
+      code: id
     }).then((r) => {
       console.log(r)
       refetch()
@@ -116,44 +133,48 @@ const QRCodeList = () => {
                 />
               </Row.Custom>
 
-              <Row.Custom label={'출석 시작 시(24시간제)'}>
-                <CFormInput
-                  placeholder='(13, 14)'
-                  value={startHour}
-                  onChange={(event) => {
-                    onChangeStartHourValue(event.target.value)
-                  }}
-                />
+              <Row.Custom label={'출석 시작 시간'}>
+                <Row.Custom label={'시간(24시간)'}>
+                  <CFormInput
+                    placeholder='(07, 13)'
+                    value={startHour}
+                    onChange={(event) => {
+                      onChangeStartHourValue(event.target.value)
+                    }}
+                  />
+                </Row.Custom>
+
+                <Row.Custom label={'분'}>
+                  <CFormInput
+                    placeholder='(00, 30)'
+                    value={startMinute}
+                    onChange={(event) => {
+                      onChangeStartMinuteValue(event.target.value)
+                    }}
+                  />
+                </Row.Custom>
               </Row.Custom>
 
-              <Row.Custom label={'출석 시작 분'}>
-                <CFormInput
-                  placeholder='(10, 30)'
-                  value={startMinute}
-                  onChange={(event) => {
-                    onChangeStartMinuteValue(event.target.value)
-                  }}
-                />
-              </Row.Custom>
+              <Row.Custom label={'출석 종료 시간'}>
+                <Row.Custom label={'시간(24시간)'}>
+                  <CFormInput
+                    placeholder='(7, 14)'
+                    value={endHour}
+                    onChange={(event) => {
+                      onChangeEndHourValue(event.target.value)
+                    }}
+                  />
+                </Row.Custom>
 
-              <Row.Custom label={'출석 종료 시(24시간제)'}>
-                <CFormInput
-                  placeholder='(13, 14)'
-                  value={endHour}
-                  onChange={(event) => {
-                    onChangeEndHourValue(event.target.value)
-                  }}
-                />
-              </Row.Custom>
-
-              <Row.Custom label={'출석 종료 분'}>
-                <CFormInput
-                  placeholder='(10, 30)'
-                  value={endMinute}
-                  onChange={(event) => {
-                    onChangeEndMinuteValue(event.target.value)
-                  }}
-                />
+                <Row.Custom label={'분'}>
+                  <CFormInput
+                    placeholder='(0, 30)'
+                    value={endMinute}
+                    onChange={(event) => {
+                      onChangeEndMinuteValue(event.target.value)
+                    }}
+                  />
+                </Row.Custom>
               </Row.Custom>
 
               <Row.Custom label={'지각 허용 시간(분)'}>
@@ -165,10 +186,10 @@ const QRCodeList = () => {
                   }}
                 />
               </Row.Custom>
-            </Row.Custom>
 
-            <Row.Custom label={'1차, 2차 출석'}>
-              <AttendanceHourStatusSelect width={130}/>
+              <Row.Custom label={'1차, 2차 출석'}>
+                <AttendanceHourStatusSelect width={130}/>
+              </Row.Custom>
             </Row.Custom>
           </>
         }
@@ -193,6 +214,16 @@ const QRCodeList = () => {
               renderColumnData={{
                 modal: data => (
                   <>
+                    <>
+                      <ModalButton
+                        title='출석코드 삭제'
+                        description={`출석 코드(${data.id})를 삭제하시겠어요?`}
+                        onConfirm={() => {
+                          deleteAttendanceCode(data.id)
+                        }}>
+                        삭제
+                      </ModalButton>
+                    </>
                   </>
                 ),
               }}

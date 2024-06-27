@@ -121,4 +121,8 @@ class QrCodeService(
         return "com.cmc.android://attendance&code=$code"
     }
 
+    fun deleteAttendanceCode(code: String) {
+        return attendanceCodeRepository.deleteById(code)
+    }
+
 }
