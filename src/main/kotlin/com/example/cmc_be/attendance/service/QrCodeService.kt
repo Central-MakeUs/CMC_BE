@@ -17,7 +17,6 @@ import com.example.cmc_be.utils.RandomNumberUtil
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
@@ -63,13 +62,6 @@ class QrCodeService(
     fun getCode(code: String): AttendanceCode {
         return attendanceCodeRepository.findByIdOrNull(code)
             ?: throw NotFoundException(AttendanceErrorCode.NOT_EXIST_ATTENDANCE_CODE)
-    }
-
-    @Scheduled(cron = "0 0 2 * * *")
-    fun deleteAttendanceCodesOutOfTime() {
-        val attendanceCodes = attendanceCodeRepository.findAll()
-        val invalidAttendanceCodes = attendanceCodes.filter { attendanceCode -> attendanceCode.validate() != null }
-        attendanceCodeRepository.deleteAll(invalidAttendanceCodes)
     }
 
     fun getAllCodes(): List<AttendanceCode> {

@@ -33,12 +33,7 @@ data class AttendanceCode(
 ) {
     fun validate(): BadRequestException? {
         val currentDateTime = ZonedDateTime.now(ZoneId.systemDefault())
-        val currentDate = currentDateTime.toLocalDate()
         val currentTime = currentDateTime.toLocalTime()
-
-        if (!currentDate.isEqual(generationWeeksInfo.date)) {
-            return BadRequestException(AttendanceErrorCode.INVALID_CODE)
-        }
         if (currentTime.isBefore(startTime) || currentTime.isAfter(endTime.plusMinutes(lateMinute))) {
             return BadRequestException(AttendanceErrorCode.OVERDUE_DATE)
         }
