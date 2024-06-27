@@ -16,6 +16,7 @@ import com.example.cmc_be.domain.user.entity.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -53,6 +54,17 @@ class AdminAttendanceController(
         @RequestParam code: String,
     ): CommonResponse<AttendanceCodeRes> {
         return CommonResponse.onSuccess(qrCodeService.getCodeInfo(code))
+    }
+
+    @GetMapping("/code/image")
+    @Operation(summary = "03-02-1 코드 QR이미지 조회")
+    fun getCodeImage(
+        @AuthenticationPrincipal user: User,
+        @Parameter(description = "코드", example = "8dFsb")
+        @RequestParam code: String,
+        @RequestParam type: String,
+    ): CommonResponse<ResponseEntity<ByteArray>> {
+        return CommonResponse.onSuccess(qrCodeService.getCodeImage(code, type))
     }
 
     @GetMapping("/code/all")

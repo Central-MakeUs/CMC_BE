@@ -1,0 +1,4 @@
+interface QRImageDTO {
+  body: string;
+}
+

@@ -13,6 +13,7 @@ import {CButton, CFormInput} from "@coreui/react";
 import useSelect, {Option} from "../../components/Select/useSelect";
 import {FlexBox} from "../../components/FlexBox";
 import ModalButton from "../../components/ModalButton";
+import {QRImageComponent} from "./QRImageComponent";
 
 const ATTENDANCE_CODE_COLUMN: Column[] = [
   {label: 'id', key: 'id'},
@@ -22,6 +23,8 @@ const ATTENDANCE_CODE_COLUMN: Column[] = [
   {label: '출석 시작 시간', key: 'startTime'},
   {label: '출석 종료 시간', key: 'endTime'},
   {label: '지각 허용 시간(분)', key: 'lateMinute'},
+  {label: 'AOS 코드', key: 'getAOSModal'},
+  {label: 'IOS 코드', key: 'getIOSModal'},
   {label: 'QR 삭제', key: 'modal'},
 ];
 
@@ -214,17 +217,21 @@ const QRCodeList = () => {
               renderColumnData={{
                 modal: data => (
                   <>
-                    <>
-                      <ModalButton
-                        title='출석코드 삭제'
-                        description={`출석 코드(${data.id})를 삭제하시겠어요?`}
-                        onConfirm={() => {
-                          deleteAttendanceCode(data.id)
-                        }}>
-                        삭제
-                      </ModalButton>
-                    </>
+                    <ModalButton
+                      title='출석코드 삭제'
+                      description={`출석 코드(${data.id})를 삭제하시겠어요?`}
+                      onConfirm={() => {
+                        deleteAttendanceCode(data.id)
+                      }}>
+                      삭제
+                    </ModalButton>
                   </>
+                ),
+                getAOSModal: data => (
+                  <QRImageComponent code={data.id as string} type={"AOS"}/>
+                ),
+                getIOSModal: data => (
+                  <QRImageComponent code={data.id as string} type={"IOS"}/>
                 ),
               }}
             />

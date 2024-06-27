@@ -38,6 +38,8 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.28")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation("com.google.zxing:javase:3.5.0")
+    implementation("com.google.zxing:core:3.5.0")
 
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

@@ -14,10 +14,17 @@ import com.example.cmc_be.domain.attendance.repository.AttendanceRepository
 import com.example.cmc_be.domain.generation.entity.GenerationWeeksInfo
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.utils.RandomNumberUtil
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.client.j2se.MatrixToImageWriter
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.io.ByteArrayOutputStream
+
 
 @Service
 class QrCodeService(
@@ -83,6 +90,19 @@ class QrCodeService(
             endTime = codeInfo.endTime,
             lateMinute = codeInfo.lateMinute
         )
+    }
+
+    fun getCodeImage(code: String, type: String): ResponseEntity<ByteArray> {
+        val url = if (type == "AOS") generateAndroidSchmea(code) else generateIOSSchmea(code)
+        val encode = MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, 300, 300)
+        val out = ByteArrayOutputStream()
+        MatrixToImageWriter.writeToStream(encode, "PNG", out)
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_PNG)
+            .body(out.toByteArray())
+            .also {
+                out.close()
+            }
     }
 
     fun validateCode(user: User, attendanceCode: AttendanceCode) {
