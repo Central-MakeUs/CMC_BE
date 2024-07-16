@@ -81,6 +81,10 @@ class AuthService(
         )
     }
 
+    fun logInJwt(tokenDto: TokenDto): Boolean {
+        return jwtService.getUserIdByAccessToken(tokenDto.accessToken) != null
+    }
+
     fun checkEmail(email: String) {
         if (userRepository.existsByUsernameAndStatus(email, Status.ACTIVE))
             throw BadRequestException(SignUpUserErrorCode.EXISTS_USER_EMAIL)
@@ -117,7 +121,7 @@ class AuthService(
         userRepository.save(user)
     }
 
-    fun refreshToken(refreshToken: String): RefreshTokenDto? {
+    fun refreshToken(refreshToken: String): TokenDto? {
         val userId = jwtService.getUserIdByRefreshToken(refreshToken)
         val redisRefreshToken: RefreshToken = refreshTokenRepository.findById(userId.toString()).orElseThrow {
             BadRequestException(
@@ -126,6 +130,6 @@ class AuthService(
         }
         if (redisRefreshToken.refreshToken != refreshToken) throw BadRequestException(RefreshTokenErrorCode.INVALID_REFRESH_TOKEN)
 
-        return RefreshTokenDto(jwtService.createToken(userId));
+        return TokenDto(jwtService.createToken(userId));
     }
 }

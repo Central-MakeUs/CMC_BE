@@ -6,6 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {clearJwt, clearUser, getJwt} from '../utils/utility';
 import {openToast} from '../components/Toast';
 import Content from './Content';
+import {loginApi} from "../apis/handlers/login";
 
 const DefaultLayout = () => {
   const navigate = useNavigate();
@@ -20,7 +21,13 @@ const DefaultLayout = () => {
 
     const fetchData = async () => {
       try {
-        // await loginApi.postUsersAutoLogin(getJwt())
+        await loginApi.postUsersAutoLogin(getJwt()).then((result) => {
+          if (!result) {
+            clearUser();
+            clearJwt();
+            navigate(`/admin-page/login`);
+          }
+        })
       } catch (error) {
         openToast(`${error}가 발생했습니다. 로그인 페이지로 돌아갑니다.`);
         clearUser();

@@ -110,6 +110,16 @@ class JwtService(
         }
     }
 
+    fun getUserIdByAccessToken(accessToken: String?): Long? {
+        try {
+            val claims = Jwts.parser()
+                .setSigningKey(getSecretKey())
+                .parseClaimsJws(accessToken)
+            return claims.body.get("userId", Integer::class.java).toLong()
+        } catch (e: MalformedJwtException) {
+            throw UnauthorizedException(UserAuthErrorCode.INVALID_TOKEN_EXCEPTION)
+        }
+    }
 
     fun createRefreshToken(userId: Long): String {
         val ttl: Duration = Duration.ofDays(jwtProperties.refreshTokenSeconds)

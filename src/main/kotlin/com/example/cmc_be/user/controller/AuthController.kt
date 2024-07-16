@@ -82,7 +82,14 @@ class AuthController(
             name = "X-REFRESH-TOKEN",
             schema = Schema(type = "string")
         ) @RequestHeader("X-REFRESH-TOKEN") refreshToken: String
-    ): CommonResponse<RefreshTokenDto> {
+    ): CommonResponse<TokenDto> {
         return CommonResponse.onSuccess(authService.refreshToken(refreshToken))
+    }
+
+    @PostMapping("/auto-login")
+    @Operation(summary = "00-08 JWT 로그인 (Admin)")
+    @ApiErrorCodeExample(LoginUserErrorCode::class)
+    fun jwtLogin(@RequestBody tokenDto: TokenDto): CommonResponse<Boolean> {
+        return CommonResponse.onSuccess(authService.logInJwt(tokenDto))
     }
 }

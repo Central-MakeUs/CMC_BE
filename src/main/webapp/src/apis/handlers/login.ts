@@ -9,7 +9,7 @@ export const loginApi = {
   },
 
   postUsersAutoLogin: async (jwt: string) => {
-    const url = `/users/auto-login`;
-    return await request.post(url, {jwt});
+    const url = `/auth/auto-login`;
+    return await request.post<boolean>(url, {accessToken: jwt});
   },
 };
