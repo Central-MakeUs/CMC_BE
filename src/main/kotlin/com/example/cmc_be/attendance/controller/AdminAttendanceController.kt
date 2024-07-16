@@ -76,7 +76,7 @@ class AdminAttendanceController(
     }
 
     @GetMapping("/code/page")
-    @Operation(summary = "03-03-01 모든 코드 정보 조회")
+    @Operation(summary = "03-03-01 모든 코드 정보 조회 페이징")
     fun getCodeInfoPage(
         @AuthenticationPrincipal user: User,
         @RequestParam("page") page: Int,
@@ -85,13 +85,16 @@ class AdminAttendanceController(
         return CommonResponse.onSuccess(qrCodeService.getAllCodePage(page, size))
     }
 
-    @GetMapping("/all")
-    @Operation(summary = "03-04 기수별 모든 출석 현황 체크")
-    fun getParticipantsAttendance(
+
+    @GetMapping("/all/page")
+    @Operation(summary = "03-04 특정 기수 전체 유저 출석 정보 조회")
+    fun getUserAttendanceDashboard(
         @AuthenticationPrincipal user: User,
-        @Parameter(description = "기수", example = "13") @RequestParam generation: Int,
-    ): CommonResponse<List<AllAttendanceInfos>> {
-        return CommonResponse.onSuccess(attendanceService.getParticipantsAttendance(generation))
+        @RequestParam generation: Int,
+        @RequestParam page: Int,
+        @RequestParam size: Int,
+    ): CommonResponse<PageResponse<AllAttendanceInfos>> {
+        return CommonResponse.onSuccess(attendanceService.getParticipantsAttendance(generation, page, size))
     }
 
     @DeleteMapping("/code")

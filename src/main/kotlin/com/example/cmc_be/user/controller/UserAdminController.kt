@@ -33,7 +33,7 @@ class UserAdminController(
     }
 
     @GetMapping("/management/user")
-    @Operation(summary = "05-01 특정 기수 유저 회원가입 수락")
+    @Operation(summary = "05-02 특정 기수 유저 회원가입 수락")
     fun handleSignUpApprove(
         @RequestParam userId: Long,
         @RequestParam approve: Boolean

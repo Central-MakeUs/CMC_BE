@@ -5,6 +5,7 @@ import com.example.cmc_be.attendance.dto.res.AllAttendanceInfos
 import com.example.cmc_be.attendance.dto.res.AttendanceDashboardInfo
 import com.example.cmc_be.attendance.dto.res.AttendanceInfo
 import com.example.cmc_be.attendance.dto.res.AttendancesDashboard
+import com.example.cmc_be.common.dto.response.PageResponse
 import com.example.cmc_be.common.exeption.NotFoundException
 import com.example.cmc_be.domain.attendance.entity.Attendance
 import com.example.cmc_be.domain.attendance.enums.AttendanceCategory
@@ -14,6 +15,8 @@ import com.example.cmc_be.domain.generation.repository.GenerationWeeksInfoReposi
 import com.example.cmc_be.domain.notification.exception.NotificationExceptionErrorCode
 import com.example.cmc_be.domain.user.entity.User
 import com.example.cmc_be.domain.user.repository.UserRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -73,11 +76,12 @@ class AttendanceService(
         return "${attendanceCategory.status}하였습니다."
     }
 
-    fun getParticipantsAttendance(generation: Int): List<AllAttendanceInfos> {
+    fun getParticipantsAttendance(generation: Int, page: Int, size: Int): PageResponse<AllAttendanceInfos> {
+        val pageable = PageRequest.of(page, size, Sort.by("id").descending())
         val allGeneration = generationWeeksInfoRepository.findAllByGeneration(generation).sortedBy { it.week }
-        val allUsers = userRepository.findAllByNowGeneration(generation)
+        val allUsers = userRepository.findAllByNowGeneration(generation, pageable)
         val allAttendances = attendanceRepository.findAllByGenerationWeeksInfoGeneration(generation)
-        return allUsers.map { user ->
+        return PageResponse.from(allUsers.map { user ->
             val userAttandances = allAttendances.filter { it.user.id == user.id }
             val attendanceInfos = allGeneration.map { generationWeekInfo ->
                 val userAllAttendanceData =
@@ -104,6 +108,6 @@ class AttendanceService(
                 attendanceStatus = AttendanceDashboardInfo.from(attendanceInfos),
                 attandances = attendanceInfos
             )
-        }
+        })
     }
 }
